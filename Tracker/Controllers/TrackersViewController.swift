@@ -9,6 +9,8 @@ import UIKit
 
 final class TrackersViewController: UIViewController {
     
+    // MARK: - UI Elements
+    
     private lazy var addTrackerButton: UIButton = {
         let button = UIButton.systemButton(
             with: UIImage(named: "AddButton")!,
@@ -36,10 +38,41 @@ final class TrackersViewController: UIViewController {
         return search
     }()
     
+    // MARK: - Private Properties
+    
+    private var categories: [TrackerCategory] = [
+        TrackerCategory(
+            title: "Домашний уют",
+            trackers: [
+                Tracker(id: UInt(0),
+                        name: "Поливать растения",
+                        color: .selection5,
+                        emoji: "❤️",
+                        schedule: Schedule(monday: true, tuesday: false, wednesday: false, thursday: true, friday: false, saturday: false, sunday: true))
+            ]),
+        TrackerCategory(
+            title: "Радостные мелочи",
+            trackers: [
+                Tracker(id: UInt(1),
+                        name: "Кошка заслонила камеру на созвоне",
+                        color: .selection2,
+                        emoji: "😻",
+                        schedule: Schedule(monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: true, sunday: true))
+            ])
+    ]
+    
+    private var completedTrackers: [TrackerRecord] = [
+        TrackerRecord(trackerId: UInt(0), date: Date())
+    ]
+    
+    // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
     }
+    
+    // MARK: - Private Methods
     
     private func setupNavigationBar() {
         navigationItem.title = "Трекеры"
@@ -53,6 +86,8 @@ final class TrackersViewController: UIViewController {
         
         navigationItem.searchController = searchBar
     }
+    
+    // MARK: - Actions
     
     @objc
     private func didTapAddTrackerButton() {
