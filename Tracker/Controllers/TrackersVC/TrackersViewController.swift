@@ -38,9 +38,38 @@ final class TrackersViewController: UIViewController {
         return search
     }()
     
-    // MARK: - Private Properties
+    private lazy var collectionView: UICollectionView = {
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        collection.register(
+            TrackerCollectionViewCell.self,
+            forCellWithReuseIdentifier: TrackerCollectionViewCell.reuseIdentifier
+        )
+        collection.register(
+            SectionHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: SectionHeaderView.reuseIdentifier
+        )
+        collection.translatesAutoresizingMaskIntoConstraints = false
+        collection.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        collection.dataSource = self
+        collection.delegate = self
+        return collection
+    }()
     
-    private var categories: [TrackerCategory] = [
+    private lazy var filtersButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .trackerBlue
+        button.setTitle("Фильтры", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .regular)
+        button.layer.cornerRadius = 16
+        button.layer.masksToBounds = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    // MARK: - Properties
+    
+    var categories: [TrackerCategory] = [
         TrackerCategory(
             title: "Домашний уют",
             trackers: [
@@ -57,6 +86,11 @@ final class TrackersViewController: UIViewController {
                         name: "Кошка заслонила камеру на созвоне",
                         color: .selection2,
                         emoji: "😻",
+                        schedule: Schedule(monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: true, sunday: true)),
+                Tracker(id: UInt(2),
+                        name: "Бабушка прислала открытку в вотсапе",
+                        color: .selection1,
+                        emoji: "🌺",
                         schedule: Schedule(monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: true, sunday: true))
             ])
     ]
@@ -70,6 +104,7 @@ final class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
+        setupCollectionView()
     }
     
     // MARK: - Private Methods
@@ -85,6 +120,24 @@ final class TrackersViewController: UIViewController {
         navigationItem.rightBarButtonItem = datePickerButton
         
         navigationItem.searchController = searchBar
+    }
+    
+    private func setupCollectionView() {
+        view.addSubview(UIView(frame: .zero))
+        view.addSubview(collectionView)
+        view.addSubview(filtersButton)
+        
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            filtersButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            filtersButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            filtersButton.heightAnchor.constraint(equalToConstant: 48),
+            filtersButton.widthAnchor.constraint(equalToConstant: 120)
+        ])
     }
     
     // MARK: - Actions
