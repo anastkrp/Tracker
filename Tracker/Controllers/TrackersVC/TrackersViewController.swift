@@ -38,7 +38,7 @@ final class TrackersViewController: UIViewController {
         return search
     }()
     
-    private lazy var collectionView: UICollectionView = {
+    lazy var collectionView: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collection.register(
             TrackerCollectionViewCell.self,
@@ -69,6 +69,8 @@ final class TrackersViewController: UIViewController {
     
     // MARK: - Properties
     
+    var currentDate = Date()
+    
     var categories: [TrackerCategory] = [
         TrackerCategory(
             title: "Домашний уют",
@@ -77,7 +79,7 @@ final class TrackersViewController: UIViewController {
                         name: "Поливать растения",
                         color: .selection5,
                         emoji: "❤️",
-                        schedule: Schedule(monday: true, tuesday: false, wednesday: false, thursday: true, friday: false, saturday: false, sunday: true))
+                        schedule: [.monday, .tuesday])
             ]),
         TrackerCategory(
             title: "Радостные мелочи",
@@ -86,16 +88,16 @@ final class TrackersViewController: UIViewController {
                         name: "Кошка заслонила камеру на созвоне",
                         color: .selection2,
                         emoji: "😻",
-                        schedule: Schedule(monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: true, sunday: true)),
+                        schedule: []),
                 Tracker(id: UInt(2),
                         name: "Бабушка прислала открытку в вотсапе",
                         color: .selection1,
                         emoji: "🌺",
-                        schedule: Schedule(monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: true, sunday: true))
+                        schedule: [.monday, .tuesday])
             ])
     ]
     
-    private var completedTrackers: [TrackerRecord] = [
+    var completedTrackers: [TrackerRecord] = [
         TrackerRecord(trackerId: UInt(0), date: Date())
     ]
     
@@ -140,6 +142,23 @@ final class TrackersViewController: UIViewController {
         ])
     }
     
+    // MARK: - Public Methods
+    
+    func countCompletedTrackers(_ tracker: Tracker) -> String {
+        if tracker.schedule.isEmpty {
+            return ""
+        }
+        let count = completedTrackers.filter({ $0.trackerId == tracker.id }).count
+        return String(count).correctDay()
+    }
+    
+    func isCompletedTracker(_ tracker: Tracker) -> Bool {
+        return completedTrackers.contains(
+            where: { $0.trackerId == tracker.id &&
+                Calendar.current.isDate($0.date, inSameDayAs: currentDate) }
+        )
+    }
+    
     // MARK: - Actions
     
     @objc
@@ -153,6 +172,8 @@ final class TrackersViewController: UIViewController {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yyyy"
         let formattedDate = dateFormatter.string(from: selectedDate)
+        currentDate = selectedDate
+        collectionView.reloadData()
         print("Выбранная дата: \(formattedDate)")
     }
 }

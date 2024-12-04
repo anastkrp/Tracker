@@ -33,7 +33,13 @@ extension TrackersViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         let tracker = categories[indexPath.section].trackers[indexPath.row]
-        cell.configCell(for: cell, tracker: tracker)
+        cell.delegate = self
+        cell.configCell(
+            for: cell,
+            tracker: tracker,
+            count: countCompletedTrackers(tracker),
+            isCompleted: isCompletedTracker(tracker)
+        )
         return cell
     }
     

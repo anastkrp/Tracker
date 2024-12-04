@@ -11,6 +11,8 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     static let reuseIdentifier = "TrackerCell"
     
+    weak var delegate: TrackerCollectionCellDelegate?
+    
     lazy var cardView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.clear
@@ -75,7 +77,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             cardView.leadingAnchor.constraint(equalTo: leadingAnchor),
             cardView.trailingAnchor.constraint(equalTo: trailingAnchor),
             cardView.heightAnchor.constraint(equalToConstant: 90),
-
+            
             name.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor, constant: 8),
             name.heightAnchor.constraint(equalToConstant: 43),
             name.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
@@ -97,17 +99,26 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-   
-    func configCell(for cell: TrackerCollectionViewCell, tracker: Tracker) {
-        cell.cardView.backgroundColor = tracker.color
-        cell.emojiLabel.text = tracker.emoji
-        cell.name.text = tracker.name
-        cell.countDays.text = "1 день"
-        cell.doneButton.backgroundColor = tracker.color
-    }
     
     @objc
     private func doneButtonTapped() {
-       
+        delegate?.trackerCollectionCellDidTapDone(self)
+    }
+    
+    func configButton(_ isCompleted: Bool) {
+        doneButton.setImage(
+            isCompleted ? UIImage(named: "Done.svg") : UIImage(named: "Plus.svg"),
+            for: .normal
+        )
+        doneButton.alpha = isCompleted ? 0.3 : 1.0
+    }
+    
+    func configCell(for cell: TrackerCollectionViewCell, tracker: Tracker, count: String, isCompleted: Bool) {
+        cell.cardView.backgroundColor = tracker.color
+        cell.emojiLabel.text = tracker.emoji
+        cell.name.text = tracker.name
+        cell.countDays.text = count
+        cell.doneButton.backgroundColor = tracker.color
+        configButton(isCompleted)
     }
 }
