@@ -16,6 +16,7 @@ final class SelectTypeTrackerVC: UIViewController {
         button.addTarget(self, action: #selector(didTapHabitButton), for: .touchUpInside)
         button.setTitle("Привычка", for: .normal)
         button.backgroundColor = .trackerBlack
+        button.setTitleColor(.trackerWhite, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
@@ -28,6 +29,7 @@ final class SelectTypeTrackerVC: UIViewController {
         button.addTarget(self, action: #selector(didTapIrregularEventButton), for: .touchUpInside)
         button.setTitle("Нерегулярные событие", for: .normal)
         button.backgroundColor = .trackerBlack
+        button.setTitleColor(.trackerWhite, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
@@ -38,8 +40,6 @@ final class SelectTypeTrackerVC: UIViewController {
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [habitButton, irregularEventButton])
         stackView.axis = .vertical
-        stackView.distribution = .fill
-        stackView.alignment = .fill
         stackView.spacing = 16
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
