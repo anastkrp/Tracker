@@ -10,10 +10,11 @@ import UIKit
 final class TrackerCollectionViewCell: UICollectionViewCell {
     
     static let reuseIdentifier = "TrackerCell"
-    
     weak var delegate: TrackerCollectionCellDelegate?
     
-    lazy var cardView: UIView = {
+    // MARK: - UI Elements
+    
+    private lazy var cardView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.clear
         view.layer.cornerRadius = 16
@@ -22,7 +23,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    lazy var emojiLabel: UILabel = {
+    private lazy var emojiLabel: UILabel = {
         let label = UILabel(frame: CGRect(x: 12, y: 12, width: 24, height: 24))
         label.font = .systemFont(ofSize: 14, weight: .medium)
         label.textAlignment = .center
@@ -32,7 +33,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    lazy var name: UILabel = {
+    private lazy var name: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = .trackerWhiteWithoutDarkMode
@@ -41,15 +42,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    lazy var countDays: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .trackerBlack
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    lazy var doneButton: UIButton = {
+    private lazy var doneButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "Plus.svg"), for: .normal)
         button.tintColor = .trackerWhite
@@ -60,10 +53,24 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         return button
     }()
     
+    lazy var countDays: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.textColor = .trackerBlack
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupCell()
     }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Private Methods
     
     private func setupCell() {
         addSubview(cardView)
@@ -96,14 +103,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         ])
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    @objc
-    private func doneButtonTapped() {
-        delegate?.trackerCollectionCellDidTapDone(self)
-    }
+    // MARK: - Public Methods
     
     func configButton(_ isCompleted: Bool) {
         doneButton.setImage(
@@ -120,5 +120,12 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         cell.countDays.text = count
         cell.doneButton.backgroundColor = tracker.color
         configButton(isCompleted)
+    }
+    
+    // MARK: - Actions
+    
+    @objc
+    private func doneButtonTapped() {
+        delegate?.trackerCollectionCellDidTapDone(self)
     }
 }

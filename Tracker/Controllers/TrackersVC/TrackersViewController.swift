@@ -163,7 +163,8 @@ final class TrackersViewController: UIViewController {
     
     @objc
     private func didTapAddTrackerButton() {
-        
+        let controller = UINavigationController(rootViewController: SelectTypeTrackerVC())
+        present(controller, animated: true)
     }
     
     @objc
