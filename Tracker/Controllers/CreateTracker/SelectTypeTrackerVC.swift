@@ -68,21 +68,21 @@ final class SelectTypeTrackerVC: UIViewController {
             ])
     }
     
+    private func navigation(for typeTracker: TrackerType) {
+        let viewController = CreateTrackerViewController()
+        viewController.typeTracker = typeTracker
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
     // MARK: - Actions
     
     @objc
     private func didTapHabitButton() {
-        let v = CreateTrackerViewController()
-        v.typeTracker = .habit
-        let navitationController = UINavigationController(rootViewController: v)
-        present(navitationController, animated: true)
+        navigation(for: .habit)
     }
     
     @objc
     private func didTapIrregularEventButton() {
-        let v = CreateTrackerViewController()
-        v.typeTracker = .irregularEvent
-        let navitationController = UINavigationController(rootViewController: v)
-        present(navitationController, animated: true)
+        navigation(for: .irregularEvent)
     }
 }
