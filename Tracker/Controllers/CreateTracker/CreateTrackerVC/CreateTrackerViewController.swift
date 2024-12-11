@@ -36,7 +36,7 @@ final class CreateTrackerViewController: UIViewController {
         return stackView
     }()
     
-    private lazy var trackerAdjustTableView: UITableView = {
+    lazy var trackerAdjustTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.register(
             TrackerAdjustCell.self,
@@ -69,7 +69,7 @@ final class CreateTrackerViewController: UIViewController {
     
     private lazy var createTrackerButton: UIButton = {
         let button = UIButton()
-        button.addTarget(self, action: #selector(createButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapCreateButton), for: .touchUpInside)
         button.setTitle("Создать", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.setTitleColor(.trackerWhite, for: .normal)
@@ -91,9 +91,9 @@ final class CreateTrackerViewController: UIViewController {
     
     // MARK: - Properties
     
-    var typeTracker: TrackerType = .habit
+    var typeTracker: TrackerType = .habit    
     var category = ""
-    var schedule = [String]()
+    var schedule: [Schedule] = []
     
     // MARK: - Lifecycle
     
@@ -165,7 +165,7 @@ final class CreateTrackerViewController: UIViewController {
     }
     
     @objc
-    private func createButton() {
+    private func didTapCreateButton() {
         print("create tracker")
     }
 }

@@ -66,6 +66,13 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         setupCell()
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.emojiLabel.text = nil
+        self.name.text = nil
+        self.countDays.text = nil
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

@@ -18,7 +18,8 @@ extension CreateTrackerViewController: UITableViewDataSource {
             for: indexPath
         )
         guard let adjustCell = cell as? TrackerAdjustCell else { return UITableViewCell() }
-        adjustCell.configCell(for: adjustCell, with: indexPath)
+        let weekdayString = schedule.count == 7 ? "Каждый день" : schedule.map { $0.weekdayShortName }.joined(separator: ", ")
+        adjustCell.configCell(for: adjustCell, with: indexPath, detailText: [category, weekdayString])
         return adjustCell
     }
 }

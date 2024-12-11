@@ -16,6 +16,7 @@ final class TrackerAdjustCell: UITableViewCell {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         detailTextLabel?.textColor = .trackerGray
         detailTextLabel?.font = .systemFont(ofSize: 17)
+        selectionStyle = .none
     }
     
     required init?(coder: NSCoder) {
@@ -27,9 +28,10 @@ final class TrackerAdjustCell: UITableViewCell {
         textLabel?.text = nil
     }
     
-    func configCell(for cell: TrackerAdjustCell, with indexPath: IndexPath) {
+    func configCell(for cell: TrackerAdjustCell, with indexPath: IndexPath, detailText: [String]) {
         cell.textLabel?.text = adjustLabel[indexPath.row]
-        cell.detailTextLabel?.text = adjustLabel[indexPath.row]
+        cell.detailTextLabel?.text = detailText[indexPath.row]
+        cell.accessoryType = .disclosureIndicator
         cell.backgroundColor = .trackerBackground
     }
 }
