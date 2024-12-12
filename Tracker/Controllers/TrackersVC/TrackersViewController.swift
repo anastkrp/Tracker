@@ -71,6 +71,7 @@ final class TrackersViewController: UIViewController {
     
     var currentDate = Date()
     
+    let storage = TrackersStorage.shared
     var categories: [TrackerCategory] = [
         TrackerCategory(
             title: "Домашний уют",
@@ -97,9 +98,7 @@ final class TrackersViewController: UIViewController {
             ])
     ]
     
-    var completedTrackers: [TrackerRecord] = [
-        TrackerRecord(trackerId: UInt(0), date: Date())
-    ]
+    var completedTrackers: [TrackerRecord] = []
     
     // MARK: - Lifecycle
     
@@ -107,6 +106,8 @@ final class TrackersViewController: UIViewController {
         super.viewDidLoad()
         setupNavigationBar()
         setupCollectionView()
+        categories = storage.trackers
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTrackers), name: Notification.Name("didCreateTracker"), object: nil)
     }
     
     // MARK: - Private Methods
@@ -176,5 +177,11 @@ final class TrackersViewController: UIViewController {
         currentDate = selectedDate
         collectionView.reloadData()
         print("Выбранная дата: \(formattedDate)")
+    }
+    
+    @objc
+    private func updateTrackers() {
+        categories = storage.trackers
+        collectionView.reloadData()
     }
 }

@@ -191,7 +191,9 @@ final class CreateTrackerViewController: UIViewController {
         
         storage.trackers.append(newTracker)
         
-        print("create tracker \(storage.trackers)")
+        NotificationCenter.default.post(name: Notification.Name("didCreateTracker"), object: nil)
+        storage.restData()
+        dismiss(animated: true)
     }
 }
 
