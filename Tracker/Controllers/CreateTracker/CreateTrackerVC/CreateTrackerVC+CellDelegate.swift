@@ -14,17 +14,19 @@ extension CreateTrackerViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-//            let viewController = ScheduleViewController()
-//            navigationController?.pushViewController(viewController, animated: true)
-        } else {
-            let viewController = ScheduleViewController()
-            viewController.selectedSchedule = schedule
-            viewController.onSelectSchedule = { [weak self] schedule in
+            let categoryVC = CategoryViewController()
+            categoryVC.onDismiss = { [weak self] in
                 guard let self else { return }
-                self.schedule = schedule
+                self.category = storage.selectedCategory ?? ""
                 self.trackerAdjustTableView.reloadData()
+                self.stateCreateButton()
             }
-            navigationController?.pushViewController(viewController, animated: true)
+            let navigation = UINavigationController(rootViewController: categoryVC)
+            navigation.presentationController?.delegate = categoryVC
+            present(navigation, animated: true)
+        } else {
+            let scheduleVC = ScheduleViewController()
+            navigationController?.pushViewController(scheduleVC, animated: true)
         }
     }
 }

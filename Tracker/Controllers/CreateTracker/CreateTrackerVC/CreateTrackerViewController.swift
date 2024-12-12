@@ -91,7 +91,8 @@ final class CreateTrackerViewController: UIViewController {
     
     // MARK: - Properties
     
-    var typeTracker: TrackerType = .habit    
+    var typeTracker: TrackerType = .habit
+    let storage = TrackersStorage.shared
     var category = ""
     var schedule: [Schedule] = []
     
@@ -105,6 +106,13 @@ final class CreateTrackerViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        schedule = storage.selectedSchedule
+        category = storage.selectedCategory ?? ""
+        trackerAdjustTableView.reloadData()
+        stateCreateButton()
     }
     
     // MARK: - Private Methods
@@ -135,7 +143,14 @@ final class CreateTrackerViewController: UIViewController {
         ])
     }
     
-    private func stateCreateButton() {
+    private func setupEnabledCreateButton(_ enabled: Bool) {
+        createTrackerButton.isEnabled = enabled
+        createTrackerButton.backgroundColor = enabled ? .trackerBlack : .trackerGray
+    }
+    
+    // MARK: - Public Methods
+    
+    func stateCreateButton() {
         switch typeTracker {
         case .habit:
             if trackerTitleTextField.text?.isEmpty == true || category.isEmpty || schedule.isEmpty {
@@ -152,21 +167,31 @@ final class CreateTrackerViewController: UIViewController {
         }
     }
     
-    private func setupEnabledCreateButton(_ enabled: Bool) {
-        createTrackerButton.isEnabled = enabled
-        createTrackerButton.backgroundColor = enabled ? .trackerBlack : .trackerGray
-    }
-    
     // MARK: - Actions
     
     @objc
     private func didTapCloseButton() {
+        storage.restData()
         self.navigationController?.popViewController(animated: true)
     }
     
     @objc
     private func didTapCreateButton() {
-        print("create tracker")
+        let newTracker = TrackerCategory(
+            title: category,
+            trackers: [
+                Tracker(
+                    id: UInt(),
+                    name: trackerTitleTextField.text ?? "",
+                    color: .selection15,
+                    emoji: "📚",
+                    schedule: schedule)
+            ]
+        )
+        
+        storage.trackers.append(newTracker)
+        
+        print("create tracker \(storage.trackers)")
     }
 }
 

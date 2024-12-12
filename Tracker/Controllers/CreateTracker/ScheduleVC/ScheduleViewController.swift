@@ -52,13 +52,14 @@ final class ScheduleViewController: UIViewController {
     // MARK: - Properties
     
     var selectedSchedule: [Schedule] = []
-    var onSelectSchedule: (([Schedule]) -> Void)?
+    let storage = TrackersStorage.shared
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        selectedSchedule = storage.selectedSchedule
     }
     
     // MARK: - Private Methods
@@ -99,7 +100,7 @@ final class ScheduleViewController: UIViewController {
             else { return false }
             return left < right
         }
-        onSelectSchedule?(selectedSchedule)
+        storage.selectedSchedule = selectedSchedule
         self.navigationController?.popViewController(animated: true)
     }
 }
