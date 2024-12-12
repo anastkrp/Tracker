@@ -23,5 +23,4 @@ final class TrackersStorage {
         selectedSchedule = []
         categories = []
     }
-    
 }

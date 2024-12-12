@@ -1,5 +1,5 @@
 //
-//  String+Extensions.swift
+//  String+Extension.swift
 //  Tracker
 //
 //  Created by Anastasiia Ki on 04.12.2024.
