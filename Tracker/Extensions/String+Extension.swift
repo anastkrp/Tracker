@@ -5,6 +5,8 @@
 //  Created by Anastasiia Ki on 04.12.2024.
 //
 
+import Foundation
+
 extension String {
     func correctDay() -> String {
         let count = Int(self) ?? 0

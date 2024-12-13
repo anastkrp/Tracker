@@ -40,11 +40,19 @@ final class ScheduleViewController: UIViewController {
         return button
     }()
     
+    private lazy var contentView: UIView = {
+        let view = UIView(frame: .zero)
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(weekdayTableView)
+        view.addSubview(doneButton)
+        return view
+    }()
+    
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.backgroundColor = .clear
-        scrollView.addSubview(weekdayTableView)
-        scrollView.addSubview(doneButton)
+        scrollView.addSubview(contentView)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
     }()
@@ -71,20 +79,28 @@ final class ScheduleViewController: UIViewController {
         view.addSubview(scrollView)
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             
-            weekdayTableView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: 16),
-            weekdayTableView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            weekdayTableView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-            weekdayTableView.heightAnchor.constraint(equalToConstant: 525),
-            weekdayTableView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.heightAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.heightAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            weekdayTableView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
+            weekdayTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            weekdayTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            weekdayTableView.heightAnchor.constraint(equalToConstant: 7 * 75),
             
-            doneButton.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: 20),
-            doneButton.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -20),
             doneButton.topAnchor.constraint(greaterThanOrEqualTo: weekdayTableView.bottomAnchor, constant: 24),
-            doneButton.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -16),
+            doneButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
+            doneButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            doneButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             doneButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }

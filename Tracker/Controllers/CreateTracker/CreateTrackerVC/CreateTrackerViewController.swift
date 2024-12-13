@@ -109,6 +109,7 @@ final class CreateTrackerViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         schedule = storage.selectedSchedule
         category = storage.selectedCategory ?? ""
         trackerAdjustTableView.reloadData()
@@ -138,7 +139,7 @@ final class CreateTrackerViewController: UIViewController {
             
             buttonsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             buttonsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            buttonsStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0),
+            buttonsStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             buttonsStackView.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
@@ -220,5 +221,10 @@ extension CreateTrackerViewController: UITextFieldDelegate {
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         stateCreateButton()
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

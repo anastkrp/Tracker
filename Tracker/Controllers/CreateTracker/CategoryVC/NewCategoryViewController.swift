@@ -90,4 +90,9 @@ extension NewCategoryViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         stateDoneButton()
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
 }

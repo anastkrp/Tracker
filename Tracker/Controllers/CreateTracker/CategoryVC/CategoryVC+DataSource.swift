@@ -23,7 +23,10 @@ extension CategoryViewController: UITableViewDataSource {
             for: indexPath
         )
         guard let categoryCell = cell as? CategoryCell else { return UITableViewCell() }
-        categoryCell.configCell(for: categoryCell, with: indexPath, categories: categories, selectedCategory: selectedCategory)
+        categoryCell.configCell(for: categoryCell,
+                                with: indexPath,
+                                categories: categories,
+                                selectedCategory: selectedCategory)
         return categoryCell
     }
 }
