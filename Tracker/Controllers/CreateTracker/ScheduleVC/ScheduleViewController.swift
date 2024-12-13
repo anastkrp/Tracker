@@ -52,7 +52,7 @@ final class ScheduleViewController: UIViewController {
     // MARK: - Properties
     
     var selectedSchedule: [Schedule] = []
-    let storage = TrackersStorage.shared
+    private let storage = TrackersStorage.shared
     
     // MARK: - Lifecycle
     

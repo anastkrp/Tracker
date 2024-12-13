@@ -33,7 +33,7 @@ final class NewCategoryViewController: UIViewController {
     
     // MARK: - Properties
     
-    let storage = TrackersStorage.shared
+    private let storage = TrackersStorage.shared
     var newCategory: String?
     
     // MARK: - Lifecycle

@@ -181,7 +181,7 @@ final class CreateTrackerViewController: UIViewController {
             title: category,
             trackers: [
                 Tracker(
-                    id: UInt(),
+                    id: UInt.random(in: 1...100),
                     name: trackerTitleTextField.text ?? "",
                     color: .selection15,
                     emoji: "📚",

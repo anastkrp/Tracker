@@ -71,33 +71,8 @@ final class TrackersViewController: UIViewController {
     
     var currentDate = Date()
     
-    let storage = TrackersStorage.shared
-    var categories: [TrackerCategory] = [
-        TrackerCategory(
-            title: "Домашний уют",
-            trackers: [
-                Tracker(id: UInt(0),
-                        name: "Поливать растения",
-                        color: .selection5,
-                        emoji: "❤️",
-                        schedule: [.monday, .tuesday])
-            ]),
-        TrackerCategory(
-            title: "Радостные мелочи",
-            trackers: [
-                Tracker(id: UInt(1),
-                        name: "Кошка заслонила камеру на созвоне",
-                        color: .selection2,
-                        emoji: "😻",
-                        schedule: []),
-                Tracker(id: UInt(2),
-                        name: "Бабушка прислала открытку в вотсапе",
-                        color: .selection1,
-                        emoji: "🌺",
-                        schedule: [.monday, .tuesday])
-            ])
-    ]
-    
+    private let storage = TrackersStorage.shared
+    var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     
     // MARK: - Lifecycle
@@ -106,8 +81,12 @@ final class TrackersViewController: UIViewController {
         super.viewDidLoad()
         setupNavigationBar()
         setupCollectionView()
-        categories = storage.trackers
+        filterDayTrackers()
         NotificationCenter.default.addObserver(self, selector: #selector(updateTrackers), name: Notification.Name("didCreateTracker"), object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Private Methods
@@ -143,6 +122,37 @@ final class TrackersViewController: UIViewController {
         ])
     }
     
+    private func filterDayTrackers() {
+        var filteredTrackers: [TrackerCategory] = []
+        let storage = storage.trackers
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE"
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        let weekday = dateFormatter.string(from: currentDate).capitalized
+        
+        for category in storage {
+            let filtered = category.trackers.filter { tracker in
+                if tracker.schedule.isEmpty {
+                    // irregularEvent
+                    return !completedTrackers.contains { record in
+                        record.trackerId == tracker.id &&
+                        !Calendar.current.isDate(record.date, inSameDayAs: currentDate)
+                    }
+                } else {
+                    // habit
+                    return tracker.schedule.contains(
+                        where: { $0.weekdayFullName == weekday }
+                    )
+                }
+            }
+            if !filtered.isEmpty {
+                filteredTrackers.append(TrackerCategory(title: category.title, trackers: filtered))
+            }
+        }
+        categories = filteredTrackers
+    }
+    
     // MARK: - Public Methods
     
     func countCompletedTrackers(_ tracker: Tracker) -> String {
@@ -171,17 +181,14 @@ final class TrackersViewController: UIViewController {
     @objc
     private func didTapDatePicker(_ sender: UIDatePicker) {
         let selectedDate = sender.date
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy"
-        let formattedDate = dateFormatter.string(from: selectedDate)
         currentDate = selectedDate
+        filterDayTrackers()
         collectionView.reloadData()
-        print("Выбранная дата: \(formattedDate)")
     }
     
     @objc
     private func updateTrackers() {
-        categories = storage.trackers
+        filterDayTrackers()
         collectionView.reloadData()
     }
 }
