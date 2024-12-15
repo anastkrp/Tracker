@@ -75,6 +75,13 @@ final class TrackersViewController: UIViewController {
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     
+    private lazy var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE"
+        formatter.locale = Locale(identifier: "ru_RU")
+        return formatter
+    }()
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -83,10 +90,6 @@ final class TrackersViewController: UIViewController {
         setupCollectionView()
         filterDayTrackers()
         NotificationCenter.default.addObserver(self, selector: #selector(updateTrackers), name: Notification.Name("didCreateTracker"), object: nil)
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Private Methods
@@ -125,10 +128,6 @@ final class TrackersViewController: UIViewController {
     private func filterDayTrackers() {
         var filteredTrackers: [TrackerCategory] = []
         let storage = storage.trackers
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE"
-        dateFormatter.locale = Locale(identifier: "ru_RU")
         let weekday = dateFormatter.string(from: currentDate).capitalized
         
         for category in storage {
@@ -156,9 +155,8 @@ final class TrackersViewController: UIViewController {
     // MARK: - Public Methods
     
     func countCompletedTrackers(_ tracker: Tracker) -> String {
-        if tracker.schedule.isEmpty {
-            return ""
-        }
+        guard !tracker.schedule.isEmpty else { return "" }
+
         let count = completedTrackers.filter({ $0.trackerId == tracker.id }).count
         return String(count).correctDay()
     }

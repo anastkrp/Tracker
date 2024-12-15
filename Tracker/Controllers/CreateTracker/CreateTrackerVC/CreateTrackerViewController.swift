@@ -105,7 +105,7 @@ final class CreateTrackerViewController: UIViewController {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.endEditing(true)
+        view.endEditing(true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
