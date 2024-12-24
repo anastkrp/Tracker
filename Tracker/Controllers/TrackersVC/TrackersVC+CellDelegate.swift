@@ -17,14 +17,16 @@ extension TrackersViewController: TrackerCollectionCellDelegate {
                 where: { $0.trackerId == tracker.id &&
                     Calendar.current.isDate($0.date, inSameDayAs: currentDate) }
             ) {
-                completedTrackers.remove(at: index)
+                recordStore.deleteRecord(
+                    trackerId: completedTrackers[index].trackerId,
+                    date: completedTrackers[index].date
+                )
                 cell.configButton(false)
                 cell.countDays.text = countCompletedTrackers(tracker)
             }
         } else {
             if currentDate > Date() { return }
-            let record = TrackerRecord(trackerId: tracker.id, date: currentDate)
-            completedTrackers.append(record)
+            recordStore.saveRecord(trackerId: tracker.id, date: currentDate)
             cell.configButton(true)
             cell.countDays.text = countCompletedTrackers(tracker)
         }

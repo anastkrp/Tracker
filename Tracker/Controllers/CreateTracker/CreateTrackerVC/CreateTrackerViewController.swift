@@ -136,6 +136,7 @@ final class CreateTrackerViewController: UIViewController {
     // MARK: - Properties
     
     var typeTracker: TrackerType = .habit
+    private let trackerStore = TrackerStore()
     let storage = TrackersStorage.shared
     var category = ""
     var schedule: [Schedule] = []
@@ -242,21 +243,14 @@ final class CreateTrackerViewController: UIViewController {
     
     @objc
     private func didTapCreateButton() {
-        let newTracker = TrackerCategory(
-            title: category,
-            trackers: [
-                Tracker(
-                    id: UInt.random(in: 1...100),
-                    name: trackerTitleTextField.text ?? "",
-                    color: colorSelected,
-                    emoji: emojiSelected,
-                    schedule: schedule)
-            ]
+        let newTracker = Tracker(
+            id: UUID(),
+            name: trackerTitleTextField.text ?? "",
+            color: colorSelected,
+            emoji: emojiSelected,
+            schedule: schedule
         )
-        
-        storage.trackers.append(newTracker)
-        
-        NotificationCenter.default.post(name: Notification.Name("didCreateTracker"), object: nil)
+        trackerStore.saveTrackerWithCategory(tracker: newTracker, category: category)
         storage.restData()
         dismiss(animated: true)
     }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Schedule: CaseIterable {
+enum Schedule: CaseIterable, Codable {
     case monday, tuesday, wednesday, thursday, friday, saturday, sunday
     
     var weekdayFullName: String {

@@ -57,6 +57,7 @@ final class CategoryViewController: UIViewController {
     // MARK: - Properties
     
     let storage = TrackersStorage.shared
+    private let categoryStore = TrackerCategoryStore()
     var categories: [String] = []
     var selectedCategory = ""
     
@@ -67,14 +68,9 @@ final class CategoryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        categories = storage.categories
+        categoryStore.delegate = self
+        categories = categoryStore.getCategories().map { $0.title }
         selectedCategory = storage.selectedCategory ?? ""
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        categories = storage.categories
-        categoryTableView.reloadData()
     }
     
     // MARK: - Private Methods
@@ -127,5 +123,14 @@ final class CategoryViewController: UIViewController {
 extension CategoryViewController: UIAdaptivePresentationControllerDelegate {
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         onDismiss?()
+    }
+}
+
+// MARK: - Category Store Delegate
+
+extension CategoryViewController: TrackerCategoryStoreDelegate {
+    func trackerCategoryStoreDidUpdateCategories() {
+        categories = categoryStore.getCategories().map { $0.title }
+        categoryTableView.reloadData()
     }
 }
