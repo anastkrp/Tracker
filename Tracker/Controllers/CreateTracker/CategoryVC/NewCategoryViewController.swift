@@ -33,8 +33,7 @@ final class NewCategoryViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let storage = TrackersStorage.shared
-    var newCategory: String?
+    private let categoryStore = TrackerCategoryStore()
     
     // MARK: - Lifecycle
     
@@ -73,7 +72,7 @@ final class NewCategoryViewController: UIViewController {
     
     @objc
     private func didTapDoneButton() {
-        storage.categories.append(categoryTitleTextField.text ?? "")
+        categoryStore.saveCategory(categoryTitleTextField.text ?? "")
         self.navigationController?.popViewController(animated: true)
     }
     

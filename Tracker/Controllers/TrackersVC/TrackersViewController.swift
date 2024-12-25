@@ -71,7 +71,10 @@ final class TrackersViewController: UIViewController {
     
     var currentDate = Date()
     
-    private let storage = TrackersStorage.shared
+    private let trackerStore = TrackerStore()
+    private let categoryStore = TrackerCategoryStore()
+    let recordStore = TrackerRecordStore()
+    
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     
@@ -88,8 +91,12 @@ final class TrackersViewController: UIViewController {
         super.viewDidLoad()
         setupNavigationBar()
         setupCollectionView()
+        
+        trackerStore.delegate = self
+        recordStore.delegate = self
+        
+        completedTrackers = recordStore.getRecords()
         filterDayTrackers()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateTrackers), name: Notification.Name("didCreateTracker"), object: nil)
     }
     
     // MARK: - Private Methods
@@ -127,7 +134,8 @@ final class TrackersViewController: UIViewController {
     
     private func filterDayTrackers() {
         var filteredTrackers: [TrackerCategory] = []
-        let storage = storage.trackers
+        
+        let storage = groupedTrackers()
         let weekday = dateFormatter.string(from: currentDate).capitalized
         
         for category in storage {
@@ -149,14 +157,28 @@ final class TrackersViewController: UIViewController {
                 filteredTrackers.append(TrackerCategory(title: category.title, trackers: filtered))
             }
         }
-        categories = filteredTrackers
+        categories = filteredTrackers.sorted { $0.title < $1.title }
+    }
+    
+    private func groupedTrackers() -> [TrackerCategory] {
+        var groupedTrackers: [String: [Tracker]] = [:]
+        let allTrackers = trackerStore.getTrackers()
+        let allCategories = categoryStore.getCategoriesWithTrackers(trackers: allTrackers)
+        
+        for tracker in allTrackers {
+            if let categoryTitle = allCategories.first(
+                where: { $0.trackers.contains(where: { $0.id == tracker.id} ) }
+            ) {
+                groupedTrackers[categoryTitle.title, default: []].append(tracker)
+            }
+        }
+        return groupedTrackers.map { TrackerCategory(title: $0.key, trackers: $0.value) }
     }
     
     // MARK: - Public Methods
     
     func countCompletedTrackers(_ tracker: Tracker) -> String {
         guard !tracker.schedule.isEmpty else { return "" }
-
         let count = completedTrackers.filter({ $0.trackerId == tracker.id }).count
         return String(count).correctDay()
     }
@@ -183,10 +205,21 @@ final class TrackersViewController: UIViewController {
         filterDayTrackers()
         collectionView.reloadData()
     }
-    
-    @objc
-    private func updateTrackers() {
+}
+
+// MARK: - Tracker Store Delegate
+
+extension TrackersViewController: TrackerStoreDelegate {
+    func trackerStoreDidUpdateTrackers() {
         filterDayTrackers()
         collectionView.reloadData()
+    }
+}
+
+// MARK: - Record Store Delegate
+
+extension TrackersViewController: TrackerRecordStoreDelegate {
+    func trackerRecordStoreDidUpdate() {
+        completedTrackers = recordStore.getRecords()
     }
 }

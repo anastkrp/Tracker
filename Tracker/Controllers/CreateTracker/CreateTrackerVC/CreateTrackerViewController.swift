@@ -52,6 +52,30 @@ final class CreateTrackerViewController: UIViewController {
         return tableView
     }()
     
+    private lazy var collectionView: UICollectionView = {
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        collection.register(
+            EmojiCell.self,
+            forCellWithReuseIdentifier: EmojiCell.reuseIdentifier
+        )
+        collection.register(
+            ColorCell.self,
+            forCellWithReuseIdentifier: ColorCell.reuseIdentifier
+        )
+        collection.register(
+            CreateTrackerSectionHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: CreateTrackerSectionHeaderView.reuseIdentifier
+        )
+        collection.translatesAutoresizingMaskIntoConstraints = false
+        collection.contentInset = UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18)
+        collection.isScrollEnabled = false
+        collection.allowsMultipleSelection = true
+        collection.dataSource = self
+        collection.delegate = self
+        return collection
+    }()
+    
     private lazy var closeButton: UIButton = {
         let button = UIButton()
         button.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
@@ -89,12 +113,31 @@ final class CreateTrackerViewController: UIViewController {
         return stackView
     }()
     
+    private lazy var contentView: UIView = {
+        let view = UIView(frame: .zero)
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.backgroundColor = .clear
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(contentView)
+        return scrollView
+    }()
+    
+    
     // MARK: - Properties
     
     var typeTracker: TrackerType = .habit
+    private let trackerStore = TrackerStore()
     let storage = TrackersStorage.shared
     var category = ""
     var schedule: [Schedule] = []
+    var emojiSelected: String = ""
+    var colorSelected: UIColor = .clear
     
     // MARK: - Lifecycle
     
@@ -122,24 +165,46 @@ final class CreateTrackerViewController: UIViewController {
         view.backgroundColor = .trackerWhite
         navigationItem.hidesBackButton = true
         navigationItem.title = typeTracker.navigationTitle()
-        view.addSubview(textFieldStackView)
         errorLabel.isHidden = true
-        view.addSubview(trackerAdjustTableView)
-        view.addSubview(buttonsStackView)
+        view.addSubview(scrollView)
+        contentView.addSubview(textFieldStackView)
+        contentView.addSubview(trackerAdjustTableView)
+        contentView.addSubview(collectionView)
+        contentView.addSubview(buttonsStackView)
         NSLayoutConstraint.activate([
-            textFieldStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
-            textFieldStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            textFieldStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.heightAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.heightAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            textFieldStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
+            textFieldStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            textFieldStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             trackerTitleTextField.heightAnchor.constraint(equalToConstant: 75),
             
             trackerAdjustTableView.topAnchor.constraint(equalTo: textFieldStackView.bottomAnchor, constant: 24),
-            trackerAdjustTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-            trackerAdjustTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+            trackerAdjustTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
+            trackerAdjustTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
             trackerAdjustTableView.heightAnchor.constraint(equalToConstant: typeTracker == .habit ? 150 : 75),
             
-            buttonsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            buttonsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            buttonsStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            collectionView.topAnchor.constraint(equalTo: trackerAdjustTableView.bottomAnchor, constant: 0),
+            collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
+            collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
+            collectionView.heightAnchor.constraint(equalToConstant: 460),
+            
+            buttonsStackView.topAnchor.constraint(greaterThanOrEqualTo: collectionView.bottomAnchor, constant: 24),
+            buttonsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            buttonsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            buttonsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
             buttonsStackView.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
@@ -154,13 +219,13 @@ final class CreateTrackerViewController: UIViewController {
     func stateCreateButton() {
         switch typeTracker {
         case .habit:
-            if trackerTitleTextField.text?.isEmpty == true || category.isEmpty || schedule.isEmpty {
+            if trackerTitleTextField.text?.isEmpty == true || category.isEmpty || schedule.isEmpty || emojiSelected.isEmpty || colorSelected == .clear {
                 setupEnabledCreateButton(false)
             } else {
                 setupEnabledCreateButton(true)
             }
         case .irregularEvent:
-            if trackerTitleTextField.text?.isEmpty == true || category.isEmpty {
+            if trackerTitleTextField.text?.isEmpty == true || category.isEmpty || emojiSelected.isEmpty || colorSelected == .clear {
                 setupEnabledCreateButton(false)
             } else {
                 setupEnabledCreateButton(true)
@@ -178,21 +243,14 @@ final class CreateTrackerViewController: UIViewController {
     
     @objc
     private func didTapCreateButton() {
-        let newTracker = TrackerCategory(
-            title: category,
-            trackers: [
-                Tracker(
-                    id: UInt.random(in: 1...100),
-                    name: trackerTitleTextField.text ?? "",
-                    color: .selection15,
-                    emoji: "📚",
-                    schedule: schedule)
-            ]
+        let newTracker = Tracker(
+            id: UUID(),
+            name: trackerTitleTextField.text ?? "",
+            color: colorSelected,
+            emoji: emojiSelected,
+            schedule: schedule
         )
-        
-        storage.trackers.append(newTracker)
-        
-        NotificationCenter.default.post(name: Notification.Name("didCreateTracker"), object: nil)
+        trackerStore.saveTrackerWithCategory(tracker: newTracker, category: category)
         storage.restData()
         dismiss(animated: true)
     }
