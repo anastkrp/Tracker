@@ -6,7 +6,6 @@
 //
 
 import CoreData
-import UIKit
 
 final class TrackerCategoryStore: NSObject {
     private let context = CoreDataStack.shared.context

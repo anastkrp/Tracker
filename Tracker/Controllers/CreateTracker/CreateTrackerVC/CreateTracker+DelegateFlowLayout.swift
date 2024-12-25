@@ -54,9 +54,17 @@ extension CreateTrackerViewController: UICollectionViewDelegateFlowLayout {
         let item = section.items[indexPath.item]
         
         if indexPath.section == 0 {
-            emojiSelected = item as! String
+            if let emoji = item as? String {
+                emojiSelected = emoji
+            } else {
+                emojiSelected = ""
+            }
         } else {
-            colorSelected = item as! UIColor
+            if let color = item as? UIColor {
+                colorSelected = color
+            } else {
+                colorSelected = UIColor.clear
+            }
         }
         stateCreateButton()
     }

@@ -57,7 +57,16 @@ extension CreateTrackerViewController: UICollectionViewDataSource {
             else {
                 return UICollectionViewCell()
             }
-            emojiCell.emojiLabel.text = item as? String
+            
+            var emojiView = String()
+            
+            if let emoji = item as? String {
+                emojiView = emoji
+            } else {
+                emojiView = ""
+            }
+            
+            emojiCell.cellConfig(for: emojiCell, emoji: emojiView)
             return emojiCell
             
         } else {
@@ -69,7 +78,16 @@ extension CreateTrackerViewController: UICollectionViewDataSource {
             else {
                 return UICollectionViewCell()
             }
-            colorCell.colorView.backgroundColor = item as? UIColor
+            
+            var colorView = UIColor()
+            
+            if let color = item as? UIColor {
+                colorView = color
+            } else {
+                colorView = .clear
+            }
+            
+            colorCell.cellConfig(for: colorCell, color: colorView)
             return colorCell
         }
     }

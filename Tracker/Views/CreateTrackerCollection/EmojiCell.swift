@@ -10,7 +10,7 @@ import UIKit
 final class EmojiCell: UICollectionViewCell {
     static let reuseIdentifier = "emojiCell"
     
-    lazy var emojiLabel: UILabel = {
+    private lazy var emojiLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 32)
         label.textAlignment = .center
@@ -50,5 +50,9 @@ final class EmojiCell: UICollectionViewCell {
             emojiLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             emojiLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
         ])
+    }
+    
+    func cellConfig(for cell: EmojiCell, emoji: String) {
+        cell.emojiLabel.text = emoji
     }
 }

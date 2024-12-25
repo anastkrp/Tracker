@@ -10,7 +10,7 @@ import UIKit
 final class ColorCell: UICollectionViewCell {
     static let reuseIdentifier = "colorCell"
     
-    lazy var colorView: UIView = {
+    private lazy var colorView: UIView = {
         let view = UIView()
         view.backgroundColor = .selection7
         view.layer.cornerRadius = 8
@@ -55,5 +55,9 @@ final class ColorCell: UICollectionViewCell {
             colorView.heightAnchor.constraint(equalToConstant: 40),
             colorView.widthAnchor.constraint(equalToConstant: 40)
         ])
+    }
+    
+    func cellConfig(for cell: ColorCell, color: UIColor) {
+        colorView.backgroundColor = color
     }
 }

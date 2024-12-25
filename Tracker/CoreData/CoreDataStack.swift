@@ -9,6 +9,7 @@ import CoreData
 
 final class CoreDataStack {
     static let shared = CoreDataStack()
+    private init() {}
     
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "TrackerDataModel")
@@ -31,7 +32,7 @@ final class CoreDataStack {
                 try context.save()
             } catch {
                 let nserror = error as NSError
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                assertionFailure("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
     }

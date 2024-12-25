@@ -117,10 +117,6 @@ final class CreateTrackerViewController: UIViewController {
         let view = UIView(frame: .zero)
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(textFieldStackView)
-        view.addSubview(trackerAdjustTableView)
-        view.addSubview(collectionView)
-        view.addSubview(buttonsStackView)
         return view
     }()
     
@@ -171,6 +167,10 @@ final class CreateTrackerViewController: UIViewController {
         navigationItem.title = typeTracker.navigationTitle()
         errorLabel.isHidden = true
         view.addSubview(scrollView)
+        contentView.addSubview(textFieldStackView)
+        contentView.addSubview(trackerAdjustTableView)
+        contentView.addSubview(collectionView)
+        contentView.addSubview(buttonsStackView)
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
