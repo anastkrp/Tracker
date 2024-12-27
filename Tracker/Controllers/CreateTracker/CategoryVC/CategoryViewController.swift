@@ -17,7 +17,7 @@ final class CategoryViewController: UIViewController {
         tableView.backgroundColor = .clear
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         tableView.contentInset = UIEdgeInsets(top: -36, left: 0, bottom: 0, right: 0)
-        tableView.isScrollEnabled = false
+        tableView.isScrollEnabled = true
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
@@ -56,7 +56,7 @@ final class CategoryViewController: UIViewController {
     
     // MARK: - Properties
     
-    let storage = TrackersStorage.shared
+    let viewModel = CategoryViewModel()
     private let categoryStore = TrackerCategoryStore()
     var categories: [String] = []
     var selectedCategory = ""
@@ -69,8 +69,9 @@ final class CategoryViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         categoryStore.delegate = self
-        categories = categoryStore.getCategories().map { $0.title }
-        selectedCategory = storage.selectedCategory ?? ""
+        bind()
+        viewModel.getAllCategories()
+        viewModel.getSelectedCategory()
     }
     
     // MARK: - Private Methods
@@ -109,6 +110,18 @@ final class CategoryViewController: UIViewController {
         ])
     }
     
+    private func bind() {
+        viewModel.onCategoriesChange = { [weak self] categories in
+            self?.categories = categories ?? []
+            self?.categoryTableView.reloadData()
+        }
+        
+        viewModel.onSelectedCategoryChange = { [weak self] selectedCategory in
+            self?.selectedCategory = selectedCategory ?? ""
+            self?.categoryTableView.reloadData()
+        }
+    }
+    
     // MARK: - Actions
     
     @objc
@@ -130,7 +143,6 @@ extension CategoryViewController: UIAdaptivePresentationControllerDelegate {
 
 extension CategoryViewController: TrackerCategoryStoreDelegate {
     func trackerCategoryStoreDidUpdateCategories() {
-        categories = categoryStore.getCategories().map { $0.title }
-        categoryTableView.reloadData()
+        viewModel.getAllCategories()
     }
 }

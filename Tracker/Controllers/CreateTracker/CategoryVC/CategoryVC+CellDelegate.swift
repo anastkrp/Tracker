@@ -13,8 +13,7 @@ extension CategoryViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedCategory = categories[indexPath.row]
-        storage.selectedCategory = selectedCategory
+        viewModel.didSelectCategory(indexPath: indexPath)
         tableView.reloadData()
     }
 }
