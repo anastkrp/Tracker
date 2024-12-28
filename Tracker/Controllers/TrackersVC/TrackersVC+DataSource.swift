@@ -71,6 +71,6 @@ extension TrackersViewController: UICollectionViewDataSource {
         layout collectionViewLayout: UICollectionViewLayout,
         referenceSizeForHeaderInSection section: Int)
     -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 46)
+        return CGSize(width: collectionView.frame.width, height: Constants.collectionTrackersVCHeaderHeight)
     }
 }

@@ -14,7 +14,7 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        return CGSize(width: (collectionView.bounds.width - 41) / 2, height: 148)
+        return Constants.collectionTrackersVCCellSize(width: collectionView.bounds.width)
     }
     
     func collectionView(
@@ -22,7 +22,7 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         minimumInteritemSpacingForSectionAt section: Int
     ) -> CGFloat {
-        return 9
+        return Constants.collectionTrackersVCSpacing
     }
     
     func collectionView(

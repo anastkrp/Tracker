@@ -18,8 +18,8 @@ final class ScheduleViewController: UIViewController {
             forCellReuseIdentifier: WeekdayCell.reuseIdentifier
         )
         tableView.backgroundColor = .clear
-        tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        tableView.contentInset = UIEdgeInsets(top: -36, left: 0, bottom: 0, right: 0)
+        tableView.separatorInset = ContentInset.paddingLeftRight()
+        tableView.contentInset = ContentInset.paddingTop()
         tableView.isScrollEnabled = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
@@ -92,16 +92,16 @@ final class ScheduleViewController: UIViewController {
         ])
         
         NSLayoutConstraint.activate([
-            weekdayTableView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
+            weekdayTableView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.topAnchor),
             weekdayTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             weekdayTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            weekdayTableView.heightAnchor.constraint(equalToConstant: 7 * 75),
+            weekdayTableView.heightAnchor.constraint(equalToConstant: CGFloat(Constants.dayCount) * Constants.tableCellHeight),
             
-            doneButton.topAnchor.constraint(greaterThanOrEqualTo: weekdayTableView.bottomAnchor, constant: 24),
-            doneButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
-            doneButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            doneButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            doneButton.heightAnchor.constraint(equalToConstant: 60)
+            doneButton.topAnchor.constraint(greaterThanOrEqualTo: weekdayTableView.bottomAnchor, constant: Constants.topAnchor),
+            doneButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: Constants.bottomAnchor),
+            doneButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.leadingButton),
+            doneButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.trailingButton),
+            doneButton.heightAnchor.constraint(equalToConstant: Constants.heightButton)
         ])
     }
     

@@ -56,15 +56,15 @@ final class NewCategoryViewController: UIViewController {
         view.addSubview(categoryTitleTextField)
         view.addSubview(doneButton)
         NSLayoutConstraint.activate([
-            categoryTitleTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
-            categoryTitleTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant:  16),
-            categoryTitleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            categoryTitleTextField.heightAnchor.constraint(equalToConstant: 75),
+            categoryTitleTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.topAnchor),
+            categoryTitleTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant:  Constants.leadingAnchor),
+            categoryTitleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Constants.trailingAnchor),
+            categoryTitleTextField.heightAnchor.constraint(equalToConstant: Constants.textFieldHeight),
             
-            doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant:  20),
-            doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            doneButton.heightAnchor.constraint(equalToConstant: 60)
+            doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: Constants.bottomAnchor),
+            doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant:  Constants.leadingButton),
+            doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Constants.trailingButton),
+            doneButton.heightAnchor.constraint(equalToConstant: Constants.heightButton)
         ])
     }
     

@@ -50,7 +50,7 @@ final class TrackersViewController: UIViewController {
             withReuseIdentifier: SectionHeaderView.reuseIdentifier
         )
         collection.translatesAutoresizingMaskIntoConstraints = false
-        collection.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        collection.contentInset = ContentInset.paddingLeftRight()
         collection.dataSource = self
         collection.delegate = self
         return collection
@@ -107,8 +107,8 @@ final class TrackersViewController: UIViewController {
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addTrackerButton)
         
-        datePickerButton.customView?.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        datePickerButton.customView?.heightAnchor.constraint(equalToConstant: 34).isActive = true
+        datePickerButton.customView?.widthAnchor.constraint(equalToConstant: Constants.datePickerWidth).isActive = true
+        datePickerButton.customView?.heightAnchor.constraint(equalToConstant: Constants.datePickerHeight).isActive = true
         navigationItem.rightBarButtonItem = datePickerButton
         
         navigationItem.searchController = searchBar
@@ -125,10 +125,10 @@ final class TrackersViewController: UIViewController {
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            filtersButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            filtersButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: Constants.bottomAnchor),
             filtersButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            filtersButton.heightAnchor.constraint(equalToConstant: 48),
-            filtersButton.widthAnchor.constraint(equalToConstant: 120)
+            filtersButton.heightAnchor.constraint(equalToConstant: Constants.filtersButtonHeight),
+            filtersButton.widthAnchor.constraint(equalToConstant: Constants.filtersButtonWidth)
         ])
     }
     

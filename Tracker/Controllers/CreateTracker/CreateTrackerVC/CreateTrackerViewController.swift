@@ -43,8 +43,8 @@ final class CreateTrackerViewController: UIViewController {
             forCellReuseIdentifier: TrackerAdjustCell.reuseIdentifier
         )
         tableView.backgroundColor = .clear
-        tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        tableView.contentInset = UIEdgeInsets(top: -36, left: 0, bottom: 0, right: 0)
+        tableView.separatorInset = ContentInset.paddingLeftRight()
+        tableView.contentInset = ContentInset.paddingTop()
         tableView.isScrollEnabled = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
@@ -68,7 +68,7 @@ final class CreateTrackerViewController: UIViewController {
             withReuseIdentifier: CreateTrackerSectionHeaderView.reuseIdentifier
         )
         collection.translatesAutoresizingMaskIntoConstraints = false
-        collection.contentInset = UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18)
+        collection.contentInset = ContentInset.paddingCollectionCreateVC()
         collection.isScrollEnabled = false
         collection.allowsMultipleSelection = true
         collection.dataSource = self
@@ -186,26 +186,26 @@ final class CreateTrackerViewController: UIViewController {
         ])
         
         NSLayoutConstraint.activate([
-            textFieldStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
-            textFieldStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            textFieldStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            trackerTitleTextField.heightAnchor.constraint(equalToConstant: 75),
+            textFieldStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.topAnchor),
+            textFieldStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.leadingAnchor),
+            textFieldStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.trailingAnchor),
+            trackerTitleTextField.heightAnchor.constraint(equalToConstant: Constants.textFieldHeight),
             
-            trackerAdjustTableView.topAnchor.constraint(equalTo: textFieldStackView.bottomAnchor, constant: 24),
+            trackerAdjustTableView.topAnchor.constraint(equalTo: textFieldStackView.bottomAnchor, constant: Constants.topAnchor),
             trackerAdjustTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
             trackerAdjustTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
-            trackerAdjustTableView.heightAnchor.constraint(equalToConstant: typeTracker == .habit ? 150 : 75),
+            trackerAdjustTableView.heightAnchor.constraint(equalToConstant: typeTracker == .habit ? (Constants.tableCellHeight) * 2 : Constants.tableCellHeight),
             
             collectionView.topAnchor.constraint(equalTo: trackerAdjustTableView.bottomAnchor, constant: 0),
             collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
             collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
-            collectionView.heightAnchor.constraint(equalToConstant: 460),
+            collectionView.heightAnchor.constraint(equalToConstant: Constants.collectionViewHeight),
             
-            buttonsStackView.topAnchor.constraint(greaterThanOrEqualTo: collectionView.bottomAnchor, constant: 24),
-            buttonsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            buttonsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            buttonsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
-            buttonsStackView.heightAnchor.constraint(equalToConstant: 60)
+            buttonsStackView.topAnchor.constraint(greaterThanOrEqualTo: collectionView.bottomAnchor, constant: Constants.topAnchor),
+            buttonsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.leadingButton),
+            buttonsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.trailingButton),
+            buttonsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: Constants.bottomAnchor),
+            buttonsStackView.heightAnchor.constraint(equalToConstant: Constants.heightButton)
         ])
     }
     
@@ -268,7 +268,7 @@ extension CreateTrackerViewController: UITextFieldDelegate {
         
         let newText = currentText.replacingCharacters(in: stringRange, with: string)
         
-        if newText.count <= 38 {
+        if newText.count <= TextFieldRange.maxLength {
             errorLabel.isHidden = true
             return true
         } else {
