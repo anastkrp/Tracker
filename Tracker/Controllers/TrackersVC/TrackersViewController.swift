@@ -71,9 +71,9 @@ final class TrackersViewController: UIViewController {
     
     var currentDate = Date()
     
+    let viewModel = TrackersViewModel()
     private let trackerStore = TrackerStore()
-    private let categoryStore = TrackerCategoryStore()
-    let recordStore = TrackerRecordStore()
+    private let recordStore = TrackerRecordStore()
     
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
@@ -95,7 +95,8 @@ final class TrackersViewController: UIViewController {
         trackerStore.delegate = self
         recordStore.delegate = self
         
-        completedTrackers = recordStore.getRecords()
+        bind()
+        viewModel.getCompletedTrackers()
         filterDayTrackers()
     }
     
@@ -132,47 +133,19 @@ final class TrackersViewController: UIViewController {
         ])
     }
     
-    private func filterDayTrackers() {
-        var filteredTrackers: [TrackerCategory] = []
-        
-        let storage = groupedTrackers()
-        let weekday = dateFormatter.string(from: currentDate).capitalized
-        
-        for category in storage {
-            let filtered = category.trackers.filter { tracker in
-                if tracker.schedule.isEmpty {
-                    // irregularEvent
-                    return !completedTrackers.contains { record in
-                        record.trackerId == tracker.id &&
-                        !Calendar.current.isDate(record.date, inSameDayAs: currentDate)
-                    }
-                } else {
-                    // habit
-                    return tracker.schedule.contains(
-                        where: { $0.weekdayFullName == weekday }
-                    )
-                }
-            }
-            if !filtered.isEmpty {
-                filteredTrackers.append(TrackerCategory(title: category.title, trackers: filtered))
-            }
+    private func bind() {
+        viewModel.onCategoriesChange = { [weak self] categories in
+            self?.categories = categories
         }
-        categories = filteredTrackers.sorted { $0.title < $1.title }
+        
+        viewModel.onCompletedTrackersChange = { [weak self] trackers in
+            self?.completedTrackers = trackers
+        }
     }
     
-    private func groupedTrackers() -> [TrackerCategory] {
-        var groupedTrackers: [String: [Tracker]] = [:]
-        let allTrackers = trackerStore.getTrackers()
-        let allCategories = categoryStore.getCategoriesWithTrackers(trackers: allTrackers)
-        
-        for tracker in allTrackers {
-            if let categoryTitle = allCategories.first(
-                where: { $0.trackers.contains(where: { $0.id == tracker.id} ) }
-            ) {
-                groupedTrackers[categoryTitle.title, default: []].append(tracker)
-            }
-        }
-        return groupedTrackers.map { TrackerCategory(title: $0.key, trackers: $0.value) }
+    private func filterDayTrackers() {
+        let weekday = dateFormatter.string(from: currentDate).capitalized
+        viewModel.getCategoriesWithFilter(weekday: weekday, currentDate: currentDate)
     }
     
     // MARK: - Public Methods
@@ -220,6 +193,6 @@ extension TrackersViewController: TrackerStoreDelegate {
 
 extension TrackersViewController: TrackerRecordStoreDelegate {
     func trackerRecordStoreDidUpdate() {
-        completedTrackers = recordStore.getRecords()
+        viewModel.getCompletedTrackers()
     }
 }

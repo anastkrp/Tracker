@@ -17,7 +17,7 @@ extension TrackersViewController: TrackerCollectionCellDelegate {
                 where: { $0.trackerId == tracker.id &&
                     Calendar.current.isDate($0.date, inSameDayAs: currentDate) }
             ) {
-                recordStore.deleteRecord(
+                viewModel.deleteCompletedTracker(
                     trackerId: completedTrackers[index].trackerId,
                     date: completedTrackers[index].date
                 )
@@ -26,7 +26,7 @@ extension TrackersViewController: TrackerCollectionCellDelegate {
             }
         } else {
             if currentDate > Date() { return }
-            recordStore.saveRecord(trackerId: tracker.id, date: currentDate)
+            viewModel.saveCompletedTracker(trackerId: tracker.id, date: currentDate)
             cell.configButton(true)
             cell.countDays.text = countCompletedTrackers(tracker)
         }
