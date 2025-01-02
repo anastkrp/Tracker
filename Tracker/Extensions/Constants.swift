@@ -18,6 +18,7 @@ struct Constants {
     static let leadingButton: CGFloat = 20.0
     static let trailingButton: CGFloat = -20.0
     static let heightButton: CGFloat = 60.0
+    static let bottomButton: CGFloat = -50.0
     
     // DatePicker Button
     static let datePickerHeight: CGFloat = 34.0
@@ -29,6 +30,16 @@ struct Constants {
     
     // TextField
     static let textFieldHeight: CGFloat = 75.0
+    
+    // PageControl
+    static let pageControlBottom: CGFloat = -134.0
+    
+    // PageLabel
+    static let pageLabelCenterY: CGFloat = 68.0
+    
+    // logoImageView
+    static let logoImageViewHeight: CGFloat = 94.0
+    static let logoImageViewWidth: CGFloat = 91.0
     
     // Table
     static let tableCellHeight: CGFloat = 75.0
