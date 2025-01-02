@@ -131,9 +131,8 @@ final class CreateTrackerViewController: UIViewController {
     
     // MARK: - Properties
     
+    let viewModel = CreateTrackerViewModel()
     var typeTracker: TrackerType = .habit
-    private let trackerStore = TrackerStore()
-    let storage = TrackersStorage.shared
     var category = ""
     var schedule: [Schedule] = []
     var emojiSelected: String = ""
@@ -144,6 +143,7 @@ final class CreateTrackerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        bind()
         stateCreateButton()
     }
     
@@ -153,9 +153,7 @@ final class CreateTrackerViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        schedule = storage.selectedSchedule
-        category = storage.selectedCategory ?? ""
-        trackerAdjustTableView.reloadData()
+        viewModel.getSelectedSchedule()
         stateCreateButton()
     }
     
@@ -209,6 +207,18 @@ final class CreateTrackerViewController: UIViewController {
         ])
     }
     
+    private func bind() {
+        viewModel.onCategoryChange = { [weak self] category in
+            self?.category = category ?? ""
+            self?.trackerAdjustTableView.reloadData()
+        }
+        
+        viewModel.onScheduleChange = { [weak self] schedule in
+            self?.schedule = schedule ?? []
+            self?.trackerAdjustTableView.reloadData()
+        }
+    }
+    
     private func setupEnabledCreateButton(_ enabled: Bool) {
         createTrackerButton.isEnabled = enabled
         createTrackerButton.backgroundColor = enabled ? .trackerBlack : .trackerGray
@@ -237,7 +247,7 @@ final class CreateTrackerViewController: UIViewController {
     
     @objc
     private func didTapCloseButton() {
-        storage.restData()
+        viewModel.storageRestData()
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -250,8 +260,8 @@ final class CreateTrackerViewController: UIViewController {
             emoji: emojiSelected,
             schedule: schedule
         )
-        trackerStore.saveTrackerWithCategory(tracker: newTracker, category: category)
-        storage.restData()
+        viewModel.saveNewTracker(tracker: newTracker, category: category)
+        viewModel.storageRestData()
         dismiss(animated: true)
     }
 }

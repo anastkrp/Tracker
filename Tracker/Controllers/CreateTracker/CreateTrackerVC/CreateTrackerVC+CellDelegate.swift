@@ -17,7 +17,7 @@ extension CreateTrackerViewController: UITableViewDelegate {
             let categoryVC = CategoryViewController()
             categoryVC.onDismiss = { [weak self] in
                 guard let self else { return }
-                self.category = storage.selectedCategory ?? ""
+                self.viewModel.getSelectedCategory()
                 self.trackerAdjustTableView.reloadData()
                 self.stateCreateButton()
             }

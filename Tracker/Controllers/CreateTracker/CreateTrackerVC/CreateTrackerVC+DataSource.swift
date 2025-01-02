@@ -31,21 +31,21 @@ extension CreateTrackerViewController: UITableViewDataSource {
 extension CreateTrackerViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        storage.sectionType.count
+        viewModel.numberOfSections()
     }
     
     func collectionView(
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        storage.sectionType[section].items.count
+        viewModel.numberOfItems(in: section)
     }
     
     func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        let section = storage.sectionType[indexPath.section]
+        let section = viewModel.getSectionType(at: indexPath)
         let item = section.items[indexPath.item]
         
         if indexPath.section == 0 {
@@ -106,7 +106,7 @@ extension CreateTrackerViewController: UICollectionViewDataSource {
         else {
             return UICollectionReusableView()
         }
-        headerView.titleLabel.text = storage.sectionType[indexPath.section].title
+        headerView.titleLabel.text = viewModel.getSectionType(at: indexPath).title
         return headerView
     }
     

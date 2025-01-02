@@ -50,7 +50,7 @@ extension CreateTrackerViewController: UICollectionViewDelegateFlowLayout {
         _ collectionView: UICollectionView,
         didSelectItemAt indexPath: IndexPath
     ) {
-        let section = storage.sectionType[indexPath.section]
+        let section = viewModel.getSectionType(at: indexPath)
         let item = section.items[indexPath.item]
         
         if indexPath.section == 0 {
