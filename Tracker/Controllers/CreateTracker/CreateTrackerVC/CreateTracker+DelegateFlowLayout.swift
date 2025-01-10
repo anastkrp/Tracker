@@ -13,8 +13,8 @@ extension CreateTrackerViewController: UICollectionViewDelegateFlowLayout {
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
-    ) -> CGSize {
-        let size = (collectionView.bounds.width - 90) / 6
+    ) -> CGSize { 
+        let size = Constants.collectionCreateVCCellSize(width: collectionView.bounds.width)
         return CGSize(width: size, height: size)
     }
     
@@ -23,7 +23,7 @@ extension CreateTrackerViewController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         minimumInteritemSpacingForSectionAt section: Int
     ) -> CGFloat {
-        return 5
+        return Constants.collectionCreateVCSpacing
     }
     
     func collectionView(
@@ -50,7 +50,7 @@ extension CreateTrackerViewController: UICollectionViewDelegateFlowLayout {
         _ collectionView: UICollectionView,
         didSelectItemAt indexPath: IndexPath
     ) {
-        let section = storage.sectionType[indexPath.section]
+        let section = viewModel.getSectionType(at: indexPath)
         let item = section.items[indexPath.item]
         
         if indexPath.section == 0 {

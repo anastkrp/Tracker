@@ -15,9 +15,9 @@ final class CategoryViewController: UIViewController {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.register(CategoryCell.self, forCellReuseIdentifier: CategoryCell.reuseIdentifier)
         tableView.backgroundColor = .clear
-        tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        tableView.contentInset = UIEdgeInsets(top: -36, left: 0, bottom: 0, right: 0)
-        tableView.isScrollEnabled = false
+        tableView.separatorInset = ContentInset.paddingLeftRight()
+        tableView.contentInset = ContentInset.paddingTop()
+        tableView.isScrollEnabled = true
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
@@ -56,7 +56,7 @@ final class CategoryViewController: UIViewController {
     
     // MARK: - Properties
     
-    let storage = TrackersStorage.shared
+    let viewModel = CategoryViewModel()
     private let categoryStore = TrackerCategoryStore()
     var categories: [String] = []
     var selectedCategory = ""
@@ -69,8 +69,9 @@ final class CategoryViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         categoryStore.delegate = self
-        categories = categoryStore.getCategories().map { $0.title }
-        selectedCategory = storage.selectedCategory ?? ""
+        bind()
+        viewModel.getAllCategories()
+        viewModel.getSelectedCategory()
     }
     
     // MARK: - Private Methods
@@ -96,17 +97,29 @@ final class CategoryViewController: UIViewController {
         ])
         
         NSLayoutConstraint.activate([
-            categoryTableView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
+            categoryTableView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.topAnchor),
             categoryTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             categoryTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             categoryTableView.heightAnchor.constraint(equalToConstant:
-                                                        categories.count != 0 ? CGFloat(categories.count) * 75 : view.frame.height * 0.67),
-            addNewCategoryButton.topAnchor.constraint(greaterThanOrEqualTo: categoryTableView.bottomAnchor, constant: 24),
-            addNewCategoryButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
-            addNewCategoryButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            addNewCategoryButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            addNewCategoryButton.heightAnchor.constraint(equalToConstant: 60)
+                                                        categories.count != 0 ? CGFloat(categories.count) * Constants.tableCellHeight : view.frame.height * 0.67),
+            addNewCategoryButton.topAnchor.constraint(greaterThanOrEqualTo: categoryTableView.bottomAnchor, constant: Constants.topAnchor),
+            addNewCategoryButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: Constants.bottomAnchor),
+            addNewCategoryButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.leadingButton),
+            addNewCategoryButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.trailingButton),
+            addNewCategoryButton.heightAnchor.constraint(equalToConstant: Constants.heightButton)
         ])
+    }
+    
+    private func bind() {
+        viewModel.onCategoriesChange = { [weak self] categories in
+            self?.categories = categories ?? []
+            self?.categoryTableView.reloadData()
+        }
+        
+        viewModel.onSelectedCategoryChange = { [weak self] selectedCategory in
+            self?.selectedCategory = selectedCategory ?? ""
+            self?.categoryTableView.reloadData()
+        }
     }
     
     // MARK: - Actions
@@ -130,7 +143,6 @@ extension CategoryViewController: UIAdaptivePresentationControllerDelegate {
 
 extension CategoryViewController: TrackerCategoryStoreDelegate {
     func trackerCategoryStoreDidUpdateCategories() {
-        categories = categoryStore.getCategories().map { $0.title }
-        categoryTableView.reloadData()
+        viewModel.getAllCategories()
     }
 }

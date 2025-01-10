@@ -9,12 +9,11 @@ import UIKit
 
 extension CategoryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        75
+        Constants.tableCellHeight
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedCategory = categories[indexPath.row]
-        storage.selectedCategory = selectedCategory
+        viewModel.didSelectCategory(indexPath: indexPath)
         tableView.reloadData()
     }
 }

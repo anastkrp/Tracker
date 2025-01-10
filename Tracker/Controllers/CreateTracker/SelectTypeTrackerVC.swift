@@ -61,10 +61,10 @@ final class SelectTypeTrackerVC: UIViewController {
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            habitButton.heightAnchor.constraint(equalToConstant: 60),
-            irregularEventButton.heightAnchor.constraint(equalToConstant: 60)
+            stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.leadingButton),
+            stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: Constants.trailingButton),
+            habitButton.heightAnchor.constraint(equalToConstant: Constants.heightButton),
+            irregularEventButton.heightAnchor.constraint(equalToConstant: Constants.heightButton)
             ])
     }
     
