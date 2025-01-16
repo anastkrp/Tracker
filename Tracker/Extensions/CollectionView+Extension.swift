@@ -13,8 +13,10 @@ extension UICollectionView {
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
+        let emptyStateText = NSLocalizedString("emptyState.title", comment: "Text displayed on empty state")
+        
         let label = UILabel()
-        label.text = "Что будем отслеживать?"
+        label.text = emptyStateText
         label.numberOfLines = 0
         label.textAlignment = .center
         label.textColor = .trackerBlack

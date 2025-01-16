@@ -1,0 +1,5 @@
+emptyState.title = "What will we track?";
+trackersVC.title = "Trackers";
+statisticsVC.title = "Statistics";
+searchBar.placeholder = "Search";
+button.filters = "Filters";

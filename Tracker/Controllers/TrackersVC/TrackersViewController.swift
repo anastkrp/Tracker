@@ -23,7 +23,7 @@ final class TrackersViewController: UIViewController {
     
     private lazy var datePickerButton: UIBarButtonItem = {
         let datePicker = UIDatePicker()
-        datePicker.locale = Locale(identifier: "ru_RU")
+        datePicker.locale = Locale.current
         datePicker.preferredDatePickerStyle = .compact
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector(self.didTapDatePicker), for: .valueChanged)
@@ -33,7 +33,7 @@ final class TrackersViewController: UIViewController {
     
     private lazy var searchBar: UISearchController = {
         let search = UISearchController(searchResultsController: nil)
-        search.searchBar.placeholder = "Поиск"
+        search.searchBar.placeholder = NSLocalizedString("searchBar.placeholder", comment: "")
         search.hidesNavigationBarDuringPresentation = false
         return search
     }()
@@ -57,9 +57,10 @@ final class TrackersViewController: UIViewController {
     }()
     
     private lazy var filtersButton: UIButton = {
+        let buttonTitle = NSLocalizedString("button.filters", comment: "")
         let button = UIButton()
         button.backgroundColor = .trackerBlue
-        button.setTitle("Фильтры", for: .normal)
+        button.setTitle(buttonTitle, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .regular)
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
@@ -103,7 +104,8 @@ final class TrackersViewController: UIViewController {
     // MARK: - Private Methods
     
     private func setupNavigationBar() {
-        navigationItem.title = "Трекеры"
+        let titleLabel = NSLocalizedString("trackersVC.title", comment: "")
+        navigationItem.title = titleLabel
         navigationController?.navigationBar.prefersLargeTitles = true
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addTrackerButton)
@@ -153,7 +155,11 @@ final class TrackersViewController: UIViewController {
     func countCompletedTrackers(_ tracker: Tracker) -> String {
         guard !tracker.schedule.isEmpty else { return "" }
         let count = completedTrackers.filter({ $0.trackerId == tracker.id }).count
-        return String(count).correctDay()
+        let dayString = String.localizedStringWithFormat(
+            NSLocalizedString("countDay", comment: ""),
+            count
+        )
+        return dayString
     }
     
     func isCompletedTracker(_ tracker: Tracker) -> Bool {

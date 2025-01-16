@@ -1,0 +1,5 @@
+emptyState.title = "Что будем отслеживать?";
+trackersVC.title = "Трекеры";
+statisticsVC.title = "Статистика";
+searchBar.placeholder = "Поиск";
+button.filters = "Фильтры";
