@@ -12,9 +12,14 @@ extension TrackersViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         if categories.isEmpty {
             collectionView.emptyData()
-        } else {
-            collectionView.backgroundView = nil
+            return 0
         }
+        
+        if visibleCategories.isEmpty {
+            collectionView.searchEmpty()
+            return 0
+        }
+        collectionView.backgroundView = nil
         return visibleCategories.count
     }
     

@@ -9,11 +9,19 @@ import UIKit
 
 extension UICollectionView {
     func emptyData() {
-        let imageView = UIImageView(image: UIImage(named: "empty"))
+        collectionBackground(image: "empty", text: "emptyState.title")
+    }
+    
+    func searchEmpty() {
+        collectionBackground(image: "searchEmpty", text: "searchEmpty.title")
+    }
+    
+    private func collectionBackground(image: String, text: String){
+        let imageView = UIImageView(image: UIImage(named: image))
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
-        let emptyStateText = NSLocalizedString("emptyState.title", comment: "Text displayed on empty state")
+        let emptyStateText = NSLocalizedString(text, comment: "Text displayed on empty state")
         
         let label = UILabel()
         label.text = emptyStateText

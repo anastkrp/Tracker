@@ -1,4 +1,5 @@
 emptyState.title = "Что будем отслеживать?";
+searchEmpty.title = "Ничего не найдено";
 trackersVC.title = "Трекеры";
 statisticsVC.title = "Статистика";
 searchBar.placeholder = "Поиск";
