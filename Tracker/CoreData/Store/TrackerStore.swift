@@ -59,6 +59,19 @@ final class TrackerStore: NSObject {
         CoreDataStack.shared.saveContext()
     }
     
+    func deleteTracker(withId id: UUID) {
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        
+        do {
+            if let results = try? context.fetch(fetchRequest).first {
+                results.category = nil
+                context.delete(results)
+                CoreDataStack.shared.saveContext()
+            }
+        }
+    }
+    
     private func fetchCategory(title: String) -> TrackerCategoryCoreData? {
         let fetchRequest = TrackerCategoryCoreData.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "title == %@", title)

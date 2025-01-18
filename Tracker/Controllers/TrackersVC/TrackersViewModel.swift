@@ -62,6 +62,10 @@ final class TrackersViewModel {
         return groupedTrackers.map { TrackerCategory(title: $0.key, trackers: $0.value) }
     }
     
+    func deleteTracker(trackerId: UUID) {
+        trackerStore.deleteTracker(withId: trackerId)
+    }
+    
     // MARK: - Completed Trackers
     
     func getCompletedTrackers() {

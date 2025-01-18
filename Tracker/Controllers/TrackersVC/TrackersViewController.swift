@@ -182,6 +182,32 @@ final class TrackersViewController: UIViewController {
         )
     }
     
+    func showAlert(completion: @escaping (Bool) -> Void) {
+        let alert = UIAlertController(
+            title: "",
+            message: NSLocalizedString("alert.message", comment: ""),
+            preferredStyle: .actionSheet
+        )
+        
+        let deleteAction = UIAlertAction(
+            title: NSLocalizedString("action.delete", comment: ""),
+            style: .destructive
+        ) { _ in
+            completion(true)
+        }
+        
+        let cancelAction = UIAlertAction(
+            title: NSLocalizedString("action.cancel", comment: ""),
+            style: .cancel
+        ) { _ in
+            completion(false)
+        }
+        
+        alert.addAction(deleteAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true)
+    }
+    
     // MARK: - Actions
     
     @objc
