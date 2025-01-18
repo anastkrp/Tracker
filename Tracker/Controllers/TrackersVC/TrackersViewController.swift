@@ -34,6 +34,7 @@ final class TrackersViewController: UIViewController {
     private lazy var searchBar: UISearchController = {
         let search = UISearchController(searchResultsController: nil)
         search.searchBar.placeholder = NSLocalizedString("searchBar.placeholder", comment: "")
+        search.obscuresBackgroundDuringPresentation = false
         search.hidesNavigationBarDuringPresentation = false
         return search
     }()
@@ -78,6 +79,7 @@ final class TrackersViewController: UIViewController {
     let analyticsService = AnalyticsService()
     
     var categories: [TrackerCategory] = []
+    var visibleCategories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     
     private lazy var dateFormatter: DateFormatter = {
@@ -96,6 +98,7 @@ final class TrackersViewController: UIViewController {
         
         trackerStore.delegate = self
         recordStore.delegate = self
+        searchBar.searchResultsUpdater = self
         
         bind()
         viewModel.getCompletedTrackers()
@@ -147,6 +150,7 @@ final class TrackersViewController: UIViewController {
     private func bind() {
         viewModel.onCategoriesChange = { [weak self] categories in
             self?.categories = categories
+            self?.visibleCategories = categories
         }
         
         viewModel.onCompletedTrackersChange = { [weak self] trackers in
@@ -210,5 +214,20 @@ extension TrackersViewController: TrackerStoreDelegate {
 extension TrackersViewController: TrackerRecordStoreDelegate {
     func trackerRecordStoreDidUpdate() {
         viewModel.getCompletedTrackers()
+    }
+}
+
+// MARK: - Search Results Updating
+
+extension TrackersViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        if let searchText = searchController.searchBar.text, !searchText.isEmpty {
+            visibleCategories = categories.filter { tracker in
+                tracker.trackers.contains { $0.name.lowercased().contains(searchText.lowercased()) }
+            }
+        } else {
+            visibleCategories = categories
+        }
+        collectionView.reloadData()
     }
 }
