@@ -75,6 +75,7 @@ final class TrackersViewController: UIViewController {
     let viewModel = TrackersViewModel()
     private let trackerStore = TrackerStore()
     private let recordStore = TrackerRecordStore()
+    let analyticsService = AnalyticsService()
     
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
@@ -99,6 +100,14 @@ final class TrackersViewController: UIViewController {
         bind()
         viewModel.getCompletedTrackers()
         filterDayTrackers()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        analyticsService.report(event: "open", params: ["Main" : ""])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        analyticsService.report(event: "close", params: ["Main" : ""])
     }
     
     // MARK: - Private Methods
@@ -173,6 +182,7 @@ final class TrackersViewController: UIViewController {
     
     @objc
     private func didTapAddTrackerButton() {
+        analyticsService.report(event: "click", params: ["Main" : "add_track"])
         let controller = UINavigationController(rootViewController: SelectTypeTrackerVC())
         present(controller, animated: true)
     }
