@@ -270,9 +270,11 @@ extension TrackersViewController: TrackerPinnedStoreDelegate {
 extension TrackersViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text, !searchText.isEmpty {
-            visibleCategories = categories.filter { tracker in
-                tracker.trackers.contains { $0.name.lowercased().contains(searchText.lowercased()) }
-            }
+            visibleCategories = categories.map { category in
+                let filteredTrackers = category.trackers.filter { $0.name.lowercased().contains(searchText.lowercased())
+                }
+                return TrackerCategory(title: category.title, trackers: filteredTrackers)
+            }.filter {!$0.trackers.isEmpty }
         } else {
             visibleCategories = categories
         }
