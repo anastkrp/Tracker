@@ -48,7 +48,8 @@ extension TrackersViewController: UICollectionViewDataSource {
             for: cell,
             tracker: tracker,
             count: countCompletedTrackers(tracker),
-            isCompleted: isCompletedTracker(tracker)
+            isCompleted: isCompletedTracker(tracker),
+            isPinned: isPinnedTracker(tracker)
         )
         return cell
     }

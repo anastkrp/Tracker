@@ -76,11 +76,13 @@ final class TrackersViewController: UIViewController {
     let viewModel = TrackersViewModel()
     private let trackerStore = TrackerStore()
     private let recordStore = TrackerRecordStore()
+    private let pinnedStore = TrackerPinnedStore()
     let analyticsService = AnalyticsService()
     
     var categories: [TrackerCategory] = []
     var visibleCategories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
+    var pinnedTrackers: [TrackerPinned] = []
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -98,10 +100,12 @@ final class TrackersViewController: UIViewController {
         
         trackerStore.delegate = self
         recordStore.delegate = self
+        pinnedStore.delegate = self
         searchBar.searchResultsUpdater = self
         
         bind()
         viewModel.getCompletedTrackers()
+        viewModel.getPinnedTrackers()
         filterDayTrackers()
     }
     
@@ -156,6 +160,10 @@ final class TrackersViewController: UIViewController {
         viewModel.onCompletedTrackersChange = { [weak self] trackers in
             self?.completedTrackers = trackers
         }
+        
+        viewModel.onPinnedTrackersChange = { [weak self] trackers in
+            self?.pinnedTrackers = trackers
+        }
     }
     
     private func filterDayTrackers() {
@@ -179,6 +187,12 @@ final class TrackersViewController: UIViewController {
         return completedTrackers.contains(
             where: { $0.trackerId == tracker.id &&
                 Calendar.current.isDate($0.date, inSameDayAs: currentDate) }
+        )
+    }
+    
+    func isPinnedTracker(_ tracker: Tracker) -> Bool {
+        return pinnedTrackers.contains(
+            where: { $0.trackerId == tracker.id }
         )
     }
     
@@ -240,6 +254,14 @@ extension TrackersViewController: TrackerStoreDelegate {
 extension TrackersViewController: TrackerRecordStoreDelegate {
     func trackerRecordStoreDidUpdate() {
         viewModel.getCompletedTrackers()
+    }
+}
+
+// MARK: - Tracker Pinned Store Delegate
+
+extension TrackersViewController: TrackerPinnedStoreDelegate {
+    func pinnedStoreDidUpdate() {
+        viewModel.getPinnedTrackers()
     }
 }
 

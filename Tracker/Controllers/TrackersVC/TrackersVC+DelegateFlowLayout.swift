@@ -33,15 +33,24 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         return 0
     }
     
-    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let category = categories[indexPath.section]
-        let tracker = category.trackers[indexPath.item]
+    func collectionView(
+        _ collectionView: UICollectionView,
+        contextMenuConfigurationForItemAt indexPath: IndexPath,
+        point: CGPoint)
+    -> UIContextMenuConfiguration? {
+        let tracker = categories[indexPath.section].trackers[indexPath.row]
+        let isPinned = isPinnedTracker(tracker)
         
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
             let pinAction = UIAction(
-                title: NSLocalizedString("menu.pin", comment: "")
-            ) { _ in
-                print("pin \(tracker)")
+                title: isPinned ?
+                NSLocalizedString("menu.unpin", comment: "") : NSLocalizedString("menu.pin", comment: "")
+            ) { [weak self]_ in
+                if isPinned {
+                    self?.viewModel.deletePinnedTracker(trackerId: tracker.id)
+                } else {
+                    self?.viewModel.savePinnedTracker(trackerId: tracker.id)
+                }
             }
             
             let editAction = UIAction(
