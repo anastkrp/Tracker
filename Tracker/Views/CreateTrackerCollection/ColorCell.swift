@@ -21,14 +21,13 @@ final class ColorCell: UICollectionViewCell {
     
     override var isSelected: Bool {
         didSet {
-            if self.isSelected {
-                layer.borderWidth = 3
-                layer.borderColor = colorView.backgroundColor?.withAlphaComponent(0.3).cgColor
-                layer.cornerRadius = 8
-            } else {
-                layer.borderColor = UIColor.clear.cgColor
-            }
+            selectedBorder()
         }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        selectedBorder()
     }
     
     override init(frame: CGRect) {
@@ -55,6 +54,16 @@ final class ColorCell: UICollectionViewCell {
             colorView.heightAnchor.constraint(equalToConstant: 40),
             colorView.widthAnchor.constraint(equalToConstant: 40)
         ])
+    }
+    
+    private func selectedBorder() {
+        if self.isSelected {
+            layer.borderWidth = 3
+            layer.borderColor = colorView.backgroundColor?.withAlphaComponent(0.3).cgColor
+            layer.cornerRadius = 8
+        } else {
+            layer.borderColor = UIColor.clear.cgColor
+        }
     }
     
     func cellConfig(for cell: ColorCell, color: UIColor) {

@@ -12,6 +12,7 @@ final class TrackersViewModel {
     private let categoryStore = TrackerCategoryStore()
     private let recordStore = TrackerRecordStore()
     private let pinnedStore = TrackerPinnedStore()
+    private let storage = TrackersStorage.shared
     
     private var categories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
@@ -124,5 +125,11 @@ final class TrackersViewModel {
     
     func deletePinnedTracker(trackerId: UUID) {
         pinnedStore.deletePinnedTracker(trackerId: trackerId)
+    }
+    
+    // MARK: - Edit Tracker
+    
+    func editTrackerData(tracker: TrackerCategory) {
+        storage.tracker = tracker
     }
 }

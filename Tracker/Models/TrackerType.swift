@@ -8,12 +8,14 @@
 import Foundation
 
 enum TrackerType {
-    case habit, irregularEvent
+    case habit, irregularEvent, editHabit, editIrregularEvent
     
     func navigationTitle() -> String {
         switch self {
         case .habit: return "Новая привычка"
         case .irregularEvent: return "Новое нерегулярное событие"
+        case .editHabit: return "Редактирование привычки"
+        case .editIrregularEvent: return "Редактирование нерегулярного события"
         }
     }
 }

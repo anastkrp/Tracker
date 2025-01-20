@@ -145,6 +145,11 @@ final class CreateTrackerViewController: UIViewController {
         setupUI()
         bind()
         stateCreateButton()
+        
+        if typeTracker == .editHabit || typeTracker == .editIrregularEvent {
+            viewModel.getDataForEdit()
+            trackerTitleTextField.text = viewModel.textForTextField()
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -155,6 +160,15 @@ final class CreateTrackerViewController: UIViewController {
         super.viewWillAppear(animated)
         viewModel.getSelectedSchedule()
         stateCreateButton()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let navigationController = self.navigationController {
+            if navigationController.isBeingDismissed {
+                viewModel.storageRestData()
+            }
+        }
     }
     
     // MARK: - Private Methods
@@ -192,7 +206,7 @@ final class CreateTrackerViewController: UIViewController {
             trackerAdjustTableView.topAnchor.constraint(equalTo: textFieldStackView.bottomAnchor, constant: Constants.topAnchor),
             trackerAdjustTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
             trackerAdjustTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
-            trackerAdjustTableView.heightAnchor.constraint(equalToConstant: typeTracker == .habit ? (Constants.tableCellHeight) * 2 : Constants.tableCellHeight),
+            trackerAdjustTableView.heightAnchor.constraint(equalToConstant: typeTracker == .habit || typeTracker == .editHabit ? (Constants.tableCellHeight) * 2 : Constants.tableCellHeight),
             
             collectionView.topAnchor.constraint(equalTo: trackerAdjustTableView.bottomAnchor, constant: 0),
             collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
@@ -209,13 +223,35 @@ final class CreateTrackerViewController: UIViewController {
     
     private func bind() {
         viewModel.onCategoryChange = { [weak self] category in
-            self?.category = category ?? ""
-            self?.trackerAdjustTableView.reloadData()
+            guard let self else { return }
+            self.category = category ?? ""
+            self.trackerAdjustTableView.reloadData()
         }
         
         viewModel.onScheduleChange = { [weak self] schedule in
-            self?.schedule = schedule ?? []
-            self?.trackerAdjustTableView.reloadData()
+            guard let self else { return }
+            self.schedule = schedule ?? []
+            self.trackerAdjustTableView.reloadData()
+        }
+        
+        viewModel.onEmojiChange = { [weak self] emoji in
+            guard let self else { return }
+            self.emojiSelected = emoji
+            self.collectionView.selectItem(
+                at: self.viewModel.indexPathEmoji(),
+                animated: true,
+                scrollPosition: []
+            )
+        }
+        
+        viewModel.onColorChange = { [weak self] color in
+            guard let self else { return }
+            self.colorSelected = color
+            self.collectionView.selectItem(
+                at: self.viewModel.indexPathColor(),
+                animated: true,
+                scrollPosition: []
+            )
         }
     }
     
@@ -228,13 +264,13 @@ final class CreateTrackerViewController: UIViewController {
     
     func stateCreateButton() {
         switch typeTracker {
-        case .habit:
+        case .habit, .editHabit:
             if trackerTitleTextField.text?.isEmpty == true || category.isEmpty || schedule.isEmpty || emojiSelected.isEmpty || colorSelected == .clear {
                 setupEnabledCreateButton(false)
             } else {
                 setupEnabledCreateButton(true)
             }
-        case .irregularEvent:
+        case .irregularEvent, .editIrregularEvent:
             if trackerTitleTextField.text?.isEmpty == true || category.isEmpty || emojiSelected.isEmpty || colorSelected == .clear {
                 setupEnabledCreateButton(false)
             } else {
@@ -247,22 +283,44 @@ final class CreateTrackerViewController: UIViewController {
     
     @objc
     private func didTapCloseButton() {
-        viewModel.storageRestData()
-        self.navigationController?.popViewController(animated: true)
+        switch typeTracker {
+        case .habit, .irregularEvent:
+            viewModel.storageRestData()
+            self.navigationController?.popViewController(animated: true)
+        case .editHabit, .editIrregularEvent:
+            viewModel.storageRestData()
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc
     private func didTapCreateButton() {
-        let newTracker = Tracker(
-            id: UUID(),
-            name: trackerTitleTextField.text ?? "",
-            color: colorSelected,
-            emoji: emojiSelected,
-            schedule: schedule
-        )
-        viewModel.saveNewTracker(tracker: newTracker, category: category)
-        viewModel.storageRestData()
-        dismiss(animated: true)
+        switch typeTracker {
+        case .habit, .irregularEvent:
+            viewModel.saveNewTracker(
+                tracker: Tracker(
+                    id: UUID(),
+                    name: trackerTitleTextField.text ?? "",
+                    color: colorSelected,
+                    emoji: emojiSelected,
+                    schedule: schedule),
+                category: category
+            )
+            viewModel.storageRestData()
+            dismiss(animated: true)
+        case .editHabit, .editIrregularEvent:
+            viewModel.updateTracker(
+                category: category,
+                tracker: Tracker(
+                    id: viewModel.getUUID(),
+                    name: trackerTitleTextField.text ?? "",
+                    color: colorSelected,
+                    emoji: emojiSelected,
+                    schedule: schedule)
+            )
+            viewModel.storageRestData()
+            dismiss(animated: true)
+        }
     }
 }
 

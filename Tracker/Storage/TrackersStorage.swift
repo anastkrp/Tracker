@@ -14,6 +14,8 @@ final class TrackersStorage {
     
     var trackers: [TrackerCategory] = []
     
+    var tracker: TrackerCategory?
+    
     var categories: [String] = []
     var selectedCategory: String?
     var selectedSchedule: [Schedule] = []
@@ -29,5 +31,6 @@ final class TrackersStorage {
         selectedCategory = nil
         selectedSchedule = []
         categories = []
+        tracker = nil
     }
 }
