@@ -17,10 +17,12 @@ final class TrackersViewModel {
     private var categories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
     private var pinnedTrackers: [TrackerPinned] = []
+    private var selectedFilter: FilterType = .all
     
     var onCategoriesChange: Binding<[TrackerCategory]>?
     var onCompletedTrackersChange: Binding<[TrackerRecord]>?
     var onPinnedTrackersChange: Binding<[TrackerPinned]>?
+    var onSelectedFilterChanged: Binding<FilterType>?
     
     // MARK: - Categories With Trackers
     
@@ -93,6 +95,42 @@ final class TrackersViewModel {
         return trackers
     }
     
+    func filterByCompleted(currentDate: Date) {
+        var filteredTrackers: [TrackerCategory] = []
+        let completedCurrentDate = completedTrackers.filter { record in
+            Calendar.current.isDate(record.date, inSameDayAs: currentDate)
+        }
+        let completedTrackerId = Set(completedCurrentDate.map { $0.trackerId })
+        
+        filteredTrackers = categories.compactMap { category in
+            let filtered = category.trackers.filter {
+                completedTrackerId.contains($0.id)
+            }
+            return TrackerCategory(title: category.title, trackers: filtered)
+        }.filter { !$0.trackers.isEmpty }
+        
+        categories = filteredTrackers
+        onCategoriesChange?(categories)
+    }
+    
+    func filterByUncompleted(currentDate: Date) {
+        var filteredTrackers: [TrackerCategory] = []
+        let uncompletedCurrentDate = completedTrackers.filter { record in
+            Calendar.current.isDate(record.date, inSameDayAs: currentDate)
+        }
+        let uncompletedTrackerId = Set(uncompletedCurrentDate.map { $0.trackerId })
+        
+        filteredTrackers = categories.compactMap { category in
+            let filtered = category.trackers.filter {
+                !uncompletedTrackerId.contains($0.id)
+            }
+            return TrackerCategory(title: category.title, trackers: filtered)
+        }.filter { !$0.trackers.isEmpty }
+        
+        categories = filteredTrackers
+        onCategoriesChange?(categories)
+    }
+    
     func deleteTracker(trackerId: UUID) {
         trackerStore.deleteTracker(withId: trackerId)
     }
@@ -131,5 +169,17 @@ final class TrackersViewModel {
     
     func editTrackerData(tracker: TrackerCategory) {
         storage.tracker = tracker
+    }
+    
+    // MARK: - Filters
+    
+    func getSelectedFilter() {
+        selectedFilter = storage.selectedFilter
+        onSelectedFilterChanged?(selectedFilter)
+    }
+    
+    func changeSelectedFilter(_ filter: FilterType) {
+        storage.selectedFilter = filter
+        onSelectedFilterChanged?(filter)
     }
 }

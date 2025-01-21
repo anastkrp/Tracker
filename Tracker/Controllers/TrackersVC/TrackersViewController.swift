@@ -21,14 +21,13 @@ final class TrackersViewController: UIViewController {
         return button
     }()
     
-    private lazy var datePickerButton: UIBarButtonItem = {
+    private lazy var datePickerButton: UIDatePicker = {
         let datePicker = UIDatePicker()
         datePicker.locale = Locale.current
         datePicker.preferredDatePickerStyle = .compact
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector(self.didTapDatePicker), for: .valueChanged)
-        let rightBarButtonItem = UIBarButtonItem(customView: datePicker)
-        return rightBarButtonItem
+        return datePicker
     }()
     
     private lazy var searchBar: UISearchController = {
@@ -51,6 +50,7 @@ final class TrackersViewController: UIViewController {
             withReuseIdentifier: SectionHeaderView.reuseIdentifier
         )
         collection.translatesAutoresizingMaskIntoConstraints = false
+        collection.alwaysBounceVertical = true
         collection.contentInset = ContentInset.paddingLeftRight()
         collection.dataSource = self
         collection.delegate = self
@@ -60,6 +60,7 @@ final class TrackersViewController: UIViewController {
     private lazy var filtersButton: UIButton = {
         let buttonTitle = NSLocalizedString("button.filters", comment: "")
         let button = UIButton()
+        button.addTarget(self, action: #selector(self.didTapFiltersButton), for: .touchUpInside)
         button.backgroundColor = .trackerBlue
         button.setTitle(buttonTitle, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .regular)
@@ -83,6 +84,7 @@ final class TrackersViewController: UIViewController {
     var visibleCategories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     var pinnedTrackers: [TrackerPinned] = []
+    var selectedFilter: FilterType = .all
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -106,6 +108,7 @@ final class TrackersViewController: UIViewController {
         bind()
         viewModel.getCompletedTrackers()
         viewModel.getPinnedTrackers()
+        viewModel.getSelectedFilter()
         filterDayTrackers()
     }
     
@@ -126,9 +129,9 @@ final class TrackersViewController: UIViewController {
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addTrackerButton)
         
-        datePickerButton.customView?.widthAnchor.constraint(equalToConstant: Constants.datePickerWidth).isActive = true
-        datePickerButton.customView?.heightAnchor.constraint(equalToConstant: Constants.datePickerHeight).isActive = true
-        navigationItem.rightBarButtonItem = datePickerButton
+        datePickerButton.widthAnchor.constraint(equalToConstant: Constants.datePickerWidth).isActive = true
+        datePickerButton.heightAnchor.constraint(equalToConstant: Constants.datePickerHeight).isActive = true
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePickerButton)
         
         navigationItem.searchController = searchBar
     }
@@ -164,11 +167,51 @@ final class TrackersViewController: UIViewController {
         viewModel.onPinnedTrackersChange = { [weak self] trackers in
             self?.pinnedTrackers = trackers
         }
+        
+        viewModel.onSelectedFilterChanged = { [weak self] filter in
+            self?.selectedFilter = filter
+            self?.stateButton()
+        }
     }
     
     private func filterDayTrackers() {
         let weekday = dateFormatter.string(from: currentDate).capitalized
+        if selectedFilter == .today {
+            currentDate = Date()
+            datePickerButton.setDate(currentDate, animated: false)
+        }
         viewModel.getCategoriesWithFilter(weekday: weekday, currentDate: currentDate)
+
+        switch selectedFilter {
+        case .all, .today:
+            break
+        case .completed:
+            viewModel.filterByCompleted(currentDate: currentDate)
+        case .uncompleted:
+            viewModel.filterByUncompleted(currentDate: currentDate)
+        }
+        
+        isFiltersButtonVisible()
+        collectionView.reloadData()
+    }
+    
+    private func stateButton() {
+        let title = isFilterActive() ?
+        NSLocalizedString("button.filtersActive", comment: "") :
+        NSLocalizedString("button.filters", comment: "")
+        filtersButton.setTitle(title, for: .normal)
+        filtersButton.titleLabel?.font = .systemFont(
+            ofSize: 17,
+            weight: isFilterActive() ? .bold : .regular
+        )
+    }
+    
+    private func isFiltersButtonVisible() {
+        if visibleCategories.isEmpty && isFilterActive() == false {
+            filtersButton.isHidden = true
+        } else {
+            filtersButton.isHidden = false
+        }
     }
     
     // MARK: - Public Methods
@@ -222,6 +265,13 @@ final class TrackersViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    func isFilterActive() -> Bool {
+        switch selectedFilter {
+        case .all: return false
+        case .completed, .uncompleted, .today: return true
+        }
+    }
+    
     // MARK: - Actions
     
     @objc
@@ -235,8 +285,24 @@ final class TrackersViewController: UIViewController {
     private func didTapDatePicker(_ sender: UIDatePicker) {
         let selectedDate = sender.date
         currentDate = selectedDate
+        if selectedFilter == .today {
+            viewModel.changeSelectedFilter(.all)
+        }
         filterDayTrackers()
+        stateButton()
         collectionView.reloadData()
+    }
+    
+    @objc
+    private func didTapFiltersButton() {
+        let controller = FiltersViewController()
+        controller.closeHandler = { [weak self] in
+            guard let self else { return }
+            self.viewModel.getSelectedFilter()
+            self.filterDayTrackers()
+        }
+        let navigation = UINavigationController(rootViewController: controller)
+        present(navigation, animated: true)
     }
 }
 
