@@ -34,6 +34,7 @@ extension TrackersViewController: UICollectionViewDelegate {
             title: NSLocalizedString("action.edit", comment: "")
         ) { [weak self] _ in
             guard let self else { return }
+            analyticsService.report(event: "click", params: ["Main" : "edit"])
             
             let viewController = CreateTrackerViewController()
             viewController.typeTracker = typeTracker ? .editIrregularEvent : .editHabit
@@ -52,6 +53,7 @@ extension TrackersViewController: UICollectionViewDelegate {
             attributes: .destructive
         ) { [weak self] _ in
             guard let self else { return }
+            analyticsService.report(event: "click", params: ["Main" : "delete"])
             
             self.showAlert { resultAction in
                 if resultAction {

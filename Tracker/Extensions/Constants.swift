@@ -78,4 +78,8 @@ struct ContentInset {
     static func paddingCollectionCreateVC() -> UIEdgeInsets {
         UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18)
     }
+    
+    static func paddingCollectionTrackersVC() -> UIEdgeInsets {
+        UIEdgeInsets(top: 0, left: 16, bottom: 80, right: 16)
+    }
 }

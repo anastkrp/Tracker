@@ -51,7 +51,7 @@ final class TrackersViewController: UIViewController {
         )
         collection.translatesAutoresizingMaskIntoConstraints = false
         collection.alwaysBounceVertical = true
-        collection.contentInset = ContentInset.paddingLeftRight()
+        collection.contentInset = ContentInset.paddingCollectionTrackersVC()
         collection.dataSource = self
         collection.delegate = self
         return collection
@@ -295,6 +295,8 @@ final class TrackersViewController: UIViewController {
     
     @objc
     private func didTapFiltersButton() {
+        analyticsService.report(event: "click", params: ["Main" : "filter"])
+        
         let controller = FiltersViewController()
         controller.closeHandler = { [weak self] in
             guard let self else { return }
