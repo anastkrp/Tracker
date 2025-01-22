@@ -49,6 +49,7 @@ final class TrackersViewController: UIViewController {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: SectionHeaderView.reuseIdentifier
         )
+        collection.backgroundColor = .trackerWhite
         collection.translatesAutoresizingMaskIntoConstraints = false
         collection.alwaysBounceVertical = true
         collection.contentInset = ContentInset.paddingCollectionTrackersVC()
@@ -137,6 +138,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupCollectionView() {
+        view.backgroundColor = .trackerWhite
         view.addSubview(UIView(frame: .zero))
         view.addSubview(collectionView)
         view.addSubview(filtersButton)
@@ -175,11 +177,11 @@ final class TrackersViewController: UIViewController {
     }
     
     private func filterDayTrackers() {
-        let weekday = dateFormatter.string(from: currentDate).capitalized
         if selectedFilter == .today {
             currentDate = Date()
             datePickerButton.setDate(currentDate, animated: false)
         }
+        let weekday = dateFormatter.string(from: currentDate).capitalized
         viewModel.getCategoriesWithFilter(weekday: weekday, currentDate: currentDate)
 
         switch selectedFilter {

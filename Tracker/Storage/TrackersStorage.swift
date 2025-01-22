@@ -30,6 +30,13 @@ final class TrackersStorage {
     let filters: [String] = FilterType.allCases.map { $0.nameFilter() }
     var selectedFilter: FilterType = .all
     
+    var statistics: [TrackerStatistics] = [
+        TrackerStatistics(value: 0, statisticsType: StatisticsType.bestPeriod),
+        TrackerStatistics(value: 0, statisticsType: StatisticsType.perfectDays),
+        TrackerStatistics(value: 0, statisticsType: StatisticsType.completedTrackers),
+        TrackerStatistics(value: 0, statisticsType: StatisticsType.averageValue)
+    ]
+    
     func restData() {
         selectedCategory = nil
         selectedSchedule = []

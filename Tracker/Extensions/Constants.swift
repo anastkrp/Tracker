@@ -20,6 +20,12 @@ struct Constants {
     static let heightButton: CGFloat = 60.0
     static let bottomButton: CGFloat = -50.0
     
+    //Label
+    static let leadingLabel: CGFloat = 12.0
+    static let trailingLabel: CGFloat = -12.0
+    static let topLabel: CGFloat = 12.0
+    static let topSubLabel: CGFloat = 7.0
+    
     // DatePicker Button
     static let datePickerHeight: CGFloat = 34.0
     static let datePickerWidth: CGFloat = 100.0
@@ -43,6 +49,11 @@ struct Constants {
     
     // Table
     static let tableCellHeight: CGFloat = 75.0
+    static let tableStatisticsCellHeight: CGFloat = 102.0
+    static let topAnchorTable: CGFloat = 6.0
+    static let leadingAnchorTable: CGFloat = 16.0
+    static let trailingAnchorTable: CGFloat = -16.0
+    static let bottomAnchorTable: CGFloat = -6.0
     
     static let dayCount: Int = 7
     
@@ -81,5 +92,9 @@ struct ContentInset {
     
     static func paddingCollectionTrackersVC() -> UIEdgeInsets {
         UIEdgeInsets(top: 0, left: 16, bottom: 80, right: 16)
+    }
+    
+    static func paddingStatisticsVC() -> UIEdgeInsets {
+        UIEdgeInsets(top: 3, left: 16, bottom: 3, right: -16)
     }
 }

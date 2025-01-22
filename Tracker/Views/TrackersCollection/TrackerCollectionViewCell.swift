@@ -151,6 +151,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         cell.doneButton.backgroundColor = tracker.color
         configButton(isCompleted)
         configPinImage(isPinned)
+        cell.backgroundColor = .clear
     }
     
     // MARK: - Actions
