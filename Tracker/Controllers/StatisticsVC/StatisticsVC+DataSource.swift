@@ -13,6 +13,7 @@ extension StatisticsViewController: UITableViewDataSource {
             tableView.statisticsEmpty()
             return 0
         }
+        tableView.backgroundView = nil
         return statistics.count
     }
     

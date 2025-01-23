@@ -18,7 +18,6 @@ final class StatisticsViewModel {
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE"
-        formatter.locale = Locale(identifier: "ru_RU")
         return formatter
     }()
     
