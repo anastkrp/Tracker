@@ -14,7 +14,10 @@ final class SelectTypeTrackerVC: UIViewController {
     private lazy var habitButton: UIButton = {
         let button = UIButton()
         button.addTarget(self, action: #selector(didTapHabitButton), for: .touchUpInside)
-        button.setTitle("Привычка", for: .normal)
+        button.setTitle(
+            NSLocalizedString("button.habit", comment: ""),
+            for: .normal
+        )
         button.backgroundColor = .trackerBlack
         button.setTitleColor(.trackerWhite, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
@@ -27,7 +30,10 @@ final class SelectTypeTrackerVC: UIViewController {
     private lazy var irregularEventButton: UIButton = {
         let button = UIButton()
         button.addTarget(self, action: #selector(didTapIrregularEventButton), for: .touchUpInside)
-        button.setTitle("Нерегулярные событие", for: .normal)
+        button.setTitle(
+            NSLocalizedString("button.irregularEvent", comment: ""),
+            for: .normal
+        )
         button.backgroundColor = .trackerBlack
         button.setTitleColor(.trackerWhite, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
@@ -56,7 +62,7 @@ final class SelectTypeTrackerVC: UIViewController {
     
     private func setupUI() {
         view.backgroundColor = .trackerWhite
-        navigationItem.title = "Создание трекера"
+        navigationItem.title = NSLocalizedString("selectTypeTrackerVC.title", comment: "")
         view.addSubview(stackView)
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),

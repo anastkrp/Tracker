@@ -13,14 +13,14 @@ final class CreateTrackerViewController: UIViewController {
     
     private lazy var trackerTitleTextField: TrackerTextField = {
         let textField = TrackerTextField()
-        textField.placeholder = "Введите название трекера"
+        textField.placeholder = NSLocalizedString("textField.tracker.placeholder", comment: "")
         textField.delegate = self
         return textField
     }()
     
     private lazy var errorLabel: UILabel = {
         let label = UILabel()
-        label.text = "Ограничение 38 символов"
+        label.text = NSLocalizedString("label.error", comment: "")
         label.textColor = .trackerRed
         label.font = .systemFont(ofSize: 17, weight: .regular)
         label.textAlignment = .center
@@ -79,7 +79,10 @@ final class CreateTrackerViewController: UIViewController {
     private lazy var closeButton: UIButton = {
         let button = UIButton()
         button.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
-        button.setTitle("Отменить", for: .normal)
+        button.setTitle(
+            NSLocalizedString("button.cancel", comment: ""),
+            for: .normal
+        )
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.setTitleColor(.trackerRed, for: .normal)
         button.backgroundColor = .clear
@@ -94,7 +97,10 @@ final class CreateTrackerViewController: UIViewController {
     private lazy var createTrackerButton: UIButton = {
         let button = UIButton()
         button.addTarget(self, action: #selector(didTapCreateButton), for: .touchUpInside)
-        button.setTitle("Создать", for: .normal)
+        button.setTitle(
+            NSLocalizedString("button.create", comment: ""),
+            for: .normal
+        )
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.setTitleColor(.trackerWhite, for: .normal)
         button.backgroundColor = .trackerBlack

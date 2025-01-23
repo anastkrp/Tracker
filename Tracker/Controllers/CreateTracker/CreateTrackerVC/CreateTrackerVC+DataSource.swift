@@ -20,7 +20,8 @@ extension CreateTrackerViewController: UITableViewDataSource {
             for: indexPath
         )
         guard let adjustCell = cell as? TrackerAdjustCell else { return UITableViewCell() }
-        let weekdayString = schedule.count == 7 ? "Каждый день" : schedule.map { $0.weekdayShortName }.joined(separator: ", ")
+        let subtitle = NSLocalizedString("adjustLabel.schedule.subtitle", comment: "")
+        let weekdayString = schedule.count == 7 ? subtitle : schedule.map { $0.weekdayShortName }.joined(separator: ", ")
         adjustCell.configCell(for: adjustCell, with: indexPath, detailText: [category, weekdayString])
         return adjustCell
     }

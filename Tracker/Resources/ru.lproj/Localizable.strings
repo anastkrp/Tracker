@@ -5,10 +5,15 @@ statisticsEmpty.title = "Анализировать пока нечего";
 
 trackersVC.title = "Трекеры";
 statisticsVC.title = "Статистика";
+selectTypeTrackerVC.title = "Создание трекера";
+categoryVC.title = "Категория";
+newCategory.title = "Новая категория";
 
 searchBar.placeholder = "Поиск";
 button.filters = "Фильтры";
 button.filtersActive = " Фильтры ✓";
+
+categoryPinned.title = "Закрепленные";
 
 alert.message = "Уверены что хотите удалить трекер?";
 action.delete = "Удалить";
@@ -27,3 +32,40 @@ statistic.bestPeriod = "Лучший период";
 statistic.perfectDays = "Идеальные дни";
 statistic.completedTrackers = "Трекеров завершено";
 statistic.averageValue = "Среднее значение";
+
+button.habit = "Привычка";
+button.irregularEvent = "Нерегулярные событие";
+
+trackerType.habit = "Новая привычка";
+trackerType.irregularEvent = "Новое нерегулярное событие";
+trackerType.editHabit = "Редактирование привычки";
+trackerType.editIrregularEvent = "Редактирование нерегулярного события";
+
+textField.tracker.placeholder = "Введите название трекера";
+textField.category.placeholder = "Введите название категории";
+label.error = "Ограничение 38 символов";
+button.cancel = "Отменить";
+button.create = "Создать";
+button.done = "Готово";
+button.newCategory = "Добавить категорию";
+
+adjustLabel.category = "Категория";
+adjustLabel.schedule = "Расписание";
+adjustLabel.schedule.subtitle = "Каждый день";
+sectionTitle.color = "Цвет";
+
+weekdayFullName.monday = "Понедельник";
+weekdayFullName.tuesday = "Вторник";
+weekdayFullName.wednesday = "Среда";
+weekdayFullName.thursday = "Четверг";
+weekdayFullName.friday = "Пятница";
+weekdayFullName.saturday = "Суббота";
+weekdayFullName.sunday = "Воскресенье";
+
+weekdayShortName.monday = "Пн";
+weekdayShortName.tuesday = "Вт";
+weekdayShortName.wednesday = "Ср";
+weekdayShortName.thursday = "Чт";
+weekdayShortName.friday = "Пт";
+weekdayShortName.saturday = "Сб";
+weekdayShortName.sunday = "Вс";

@@ -13,7 +13,7 @@ final class NewCategoryViewController: UIViewController {
     
     private lazy var categoryTitleTextField: TrackerTextField = {
         let textField = TrackerTextField()
-        textField.placeholder = "Введите название категории"
+        textField.placeholder = NSLocalizedString("textField.category.placeholder", comment: "")
         textField.delegate = self
         return textField
     }()
@@ -21,7 +21,10 @@ final class NewCategoryViewController: UIViewController {
     private lazy var doneButton: UIButton = {
         let button = UIButton()
         button.addTarget(self, action: #selector(didTapDoneButton), for: .touchUpInside)
-        button.setTitle("Готово", for: .normal)
+        button.setTitle(
+            NSLocalizedString("button.done", comment: ""),
+            for: .normal
+        )
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.setTitleColor(.trackerWhite, for: .normal)
         button.backgroundColor = .trackerBlack
@@ -52,7 +55,7 @@ final class NewCategoryViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .trackerWhite
         navigationItem.hidesBackButton = true
-        navigationItem.title = "Новая категория"
+        navigationItem.title = NSLocalizedString("newCategory.title", comment: "")
         view.addSubview(categoryTitleTextField)
         view.addSubview(doneButton)
         NSLayoutConstraint.activate([

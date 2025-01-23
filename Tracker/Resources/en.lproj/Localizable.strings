@@ -5,10 +5,15 @@ statisticsEmpty.title = "There's nothing to analyze yet";
 
 trackersVC.title = "Trackers";
 statisticsVC.title = "Statistics";
+selectTypeTrackerVC.title = "Creating a tracker";
+categoryVC.title = "Category";
+newCategory.title = "New category";
 
 searchBar.placeholder = "Search";
 button.filters = "Filters";
 button.filtersActive = " Filters ✓";
+
+categoryPinned.title = "Pinned";
 
 alert.message = "Are you sure you want to delete the tracker?";
 action.delete = "Delete";
@@ -27,3 +32,40 @@ statistic.bestPeriod = "Best period";
 statistic.perfectDays = "Perfect days";
 statistic.completedTrackers = "Completed trackers";
 statistic.averageValue = "Average value";
+
+button.habit = "Habit";
+button.irregularEvent = "Irregular events";
+
+trackerType.habit = "New habit";
+trackerType.irregularEvent = "New irregular event";
+trackerType.editHabit = "Habit editing";
+trackerType.editIrregularEvent = "Editing an irregular event";
+
+textField.tracker.placeholder = "Enter the name of the tracker";
+textField.category.placeholder = "Enter the category name";
+label.error = "The limit is 38 characters.";
+button.cancel = "Cancel";
+button.create = "Create";
+button.done = "Done";
+button.newCategory = "Add a new category";
+
+adjustLabel.category = "Category";
+adjustLabel.schedule = "Schedule";
+adjustLabel.schedule.subtitle = "Every day";
+sectionTitle.color = "Color";
+
+weekdayFullName.monday = "Monday";
+weekdayFullName.tuesday = "Tuesday";
+weekdayFullName.wednesday = "Wednesday";
+weekdayFullName.thursday = "Thursday";
+weekdayFullName.friday = "Friday";
+weekdayFullName.saturday = "Saturday";
+weekdayFullName.sunday = "Sunday";
+
+weekdayShortName.monday = "Mon.";
+weekdayShortName.tuesday = "Tue.";
+weekdayShortName.wednesday = "Wed.";
+weekdayShortName.thursday = "Thu.";
+weekdayShortName.friday = "Fri.";
+weekdayShortName.saturday = "Sat.";
+weekdayShortName.sunday = "Sun.";

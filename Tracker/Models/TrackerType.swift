@@ -12,10 +12,10 @@ enum TrackerType {
     
     func navigationTitle() -> String {
         switch self {
-        case .habit: return "Новая привычка"
-        case .irregularEvent: return "Новое нерегулярное событие"
-        case .editHabit: return "Редактирование привычки"
-        case .editIrregularEvent: return "Редактирование нерегулярного события"
+        case .habit: return NSLocalizedString("trackerType.habit", comment: "")
+        case .irregularEvent: return NSLocalizedString("trackerType.irregularEvent", comment: "")
+        case .editHabit: return NSLocalizedString("trackerType.editHabit", comment: "")
+        case .editIrregularEvent: return NSLocalizedString("trackerType.editIrregularEvent", comment: "")
         }
     }
 }

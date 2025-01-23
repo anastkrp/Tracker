@@ -27,7 +27,10 @@ final class CategoryViewController: UIViewController {
     private lazy var addNewCategoryButton: UIButton = {
         let button = UIButton()
         button.addTarget(self, action: #selector(didTapAddNewCategory), for: .touchUpInside)
-        button.setTitle("Добавить категорию", for: .normal)
+        button.setTitle(
+            NSLocalizedString("button.newCategory", comment: ""),
+            for: .normal
+        )
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.setTitleColor(.trackerWhite, for: .normal)
         button.backgroundColor = .trackerBlack
@@ -79,7 +82,7 @@ final class CategoryViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .trackerWhite
         navigationItem.hidesBackButton = true
-        navigationItem.title = "Категория"
+        navigationItem.title = NSLocalizedString("categoryVC.title", comment: "")
         view.addSubview(scrollView)
         
         NSLayoutConstraint.activate([

@@ -87,7 +87,10 @@ final class TrackersViewModel {
                 return TrackerCategory(title: category.title, trackers: filteredTrackers)
             }.filter { !$0.trackers.isEmpty }
             
-            let pinnedCategory = TrackerCategory(title: "Закрепленные", trackers: pinnedTrackers)
+            let pinnedCategory = TrackerCategory(
+                title: NSLocalizedString("categoryPinned.title", comment: ""),
+                trackers: pinnedTrackers
+            )
             
             trackers = withoutPinned.sorted { $0.title < $1.title }
             trackers.insert(pinnedCategory, at: 0)

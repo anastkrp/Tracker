@@ -10,7 +10,10 @@ import UIKit
 final class TrackerAdjustCell: UITableViewCell {
     static let reuseIdentifier = "TrackerAdjustCell"
     
-    private let adjustLabel = ["Категория", "Расписание"]
+    private let adjustLabel = [
+        NSLocalizedString("adjustLabel.category", comment: ""),
+        NSLocalizedString("adjustLabel.schedule", comment: "")
+    ]
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
