@@ -9,12 +9,20 @@ import UIKit
 
 extension UITableView {
     func emptyData() {
-        let imageView = UIImageView(image: UIImage(named: "empty"))
+        tableBackground(image: "empty", text: "categoryEmpty.title")
+    }
+    
+    func statisticsEmpty() {
+        tableBackground(image: "statisticsEmpty", text: "statisticsEmpty.title")
+    }
+    
+    private func tableBackground(image: String, text: String) {
+        let imageView = UIImageView(image: UIImage(named: image))
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         let label = UILabel()
-        label.text = "Привычки и события можно \nобъединить по смыслу"
+        label.text = NSLocalizedString(text, comment: "")
         label.numberOfLines = 0
         label.textAlignment = .center
         label.textColor = .trackerBlack

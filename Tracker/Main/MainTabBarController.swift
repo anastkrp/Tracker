@@ -16,16 +16,19 @@ final class MainTabBarController: UITabBarController {
     }
     
     private func createTabBarItem() {
+        let trackersTitle = NSLocalizedString("trackersVC.title", comment: "")
+        let statisticsTitle = NSLocalizedString("statisticsVC.title", comment: "")
+        
         let trackersTabBarItem = UINavigationController(rootViewController: TrackersViewController())
         trackersTabBarItem.tabBarItem = UITabBarItem(
-            title: "Трекеры",
+            title: trackersTitle,
             image: UIImage(named: "trackers.svg"),
             selectedImage: nil
         )
         
         let statisticsTabBarItem = UINavigationController(rootViewController: StatisticsViewController())
         statisticsTabBarItem.tabBarItem = UITabBarItem(
-            title: "Статистика",
+            title: statisticsTitle,
             image: UIImage(named: "stats.svg"),
             selectedImage: nil
         )

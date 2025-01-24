@@ -10,19 +10,31 @@ import UIKit
 extension TrackersViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        if categories.isEmpty {
-            collectionView.emptyData()
+        if isFilterActive() {
+            if visibleCategories.isEmpty {
+                collectionView.searchEmpty()
+                return 0
+            }
         } else {
-            collectionView.backgroundView = nil
+            if categories.isEmpty {
+                collectionView.emptyData()
+                return 0
+            }
+            
+            if visibleCategories.isEmpty {
+                collectionView.searchEmpty()
+                return 0
+            }
         }
-        return categories.count
+        collectionView.backgroundView = nil
+        return visibleCategories.count
     }
     
     func collectionView(
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        categories[section].trackers.count
+        visibleCategories[section].trackers.count
     }
     
     func collectionView(
@@ -37,13 +49,14 @@ extension TrackersViewController: UICollectionViewDataSource {
         else {
             return UICollectionViewCell()
         }
-        let tracker = categories[indexPath.section].trackers[indexPath.row]
+        let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
         cell.delegate = self
         cell.configCell(
             for: cell,
             tracker: tracker,
             count: countCompletedTrackers(tracker),
-            isCompleted: isCompletedTracker(tracker)
+            isCompleted: isCompletedTracker(tracker),
+            isPinned: isPinnedTracker(tracker)
         )
         return cell
     }
@@ -62,7 +75,7 @@ extension TrackersViewController: UICollectionViewDataSource {
         else {
             return UICollectionReusableView()
         }
-        headerView.titleLabel.text = categories[indexPath.section].title
+        headerView.titleLabel.text = visibleCategories[indexPath.section].title
         return headerView
     }
     

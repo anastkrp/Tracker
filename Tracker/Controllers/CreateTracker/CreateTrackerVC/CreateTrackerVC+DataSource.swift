@@ -11,7 +11,7 @@ import UIKit
 
 extension CreateTrackerViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return typeTracker == .habit ? 2 : 1
+        return typeTracker == .habit || typeTracker == .editHabit ? 2 : 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -20,7 +20,8 @@ extension CreateTrackerViewController: UITableViewDataSource {
             for: indexPath
         )
         guard let adjustCell = cell as? TrackerAdjustCell else { return UITableViewCell() }
-        let weekdayString = schedule.count == 7 ? "Каждый день" : schedule.map { $0.weekdayShortName }.joined(separator: ", ")
+        let subtitle = NSLocalizedString("adjustLabel.schedule.subtitle", comment: "")
+        let weekdayString = schedule.count == 7 ? subtitle : schedule.map { $0.weekdayShortName }.joined(separator: ", ")
         adjustCell.configCell(for: adjustCell, with: indexPath, detailText: [category, weekdayString])
         return adjustCell
     }

@@ -26,6 +26,7 @@ extension TrackersViewController: TrackerCollectionCellDelegate {
             }
         } else {
             if currentDate > Date() { return }
+            analyticsService.report(event: "click", params: ["Main" : "track"])
             viewModel.saveCompletedTracker(trackerId: tracker.id, date: currentDate)
             cell.configButton(true)
             cell.countDays.text = countCompletedTrackers(tracker)
